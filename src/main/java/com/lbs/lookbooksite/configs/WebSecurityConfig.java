@@ -1,4 +1,4 @@
-package com.lbs.configs;
+package com.lbs.lookbooksite.configs;
 
 import com.lbs.lookbooksite.service.MemberService;
 import lombok.RequiredArgsConstructor;
