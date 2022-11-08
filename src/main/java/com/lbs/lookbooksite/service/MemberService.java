@@ -32,5 +32,11 @@ public interface MemberService extends UserDetailsService {
 
 
 
-    public String signup(MemberDto dto);
+    public String signup(MemberDto memberInfo);
+
+    public void changeStyleTag(MemberDto dto);
+
+    public void changeMemberInfo(MemberDto changeMember);
+
+    public void changePassword(MemberDto changeMember);
 }

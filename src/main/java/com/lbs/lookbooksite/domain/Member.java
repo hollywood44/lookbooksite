@@ -13,11 +13,13 @@ import java.util.*;
 @Entity
 @Table(name = "member_tbl")
 @Builder
-@ToString
+@ToString(exclude = {"myCart","myOrderList","myNoticeList"})
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseTimeEntity implements UserDetails {
+
+    //<editor-fold desc="필드">
 
     // 회원 아이디
     @Id
@@ -79,8 +81,9 @@ public class Member extends BaseTimeEntity implements UserDetails {
     @OneToMany(mappedBy = "noticeId", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)
     private List<Notice> myNoticeList = new ArrayList<>();
 
+    //</editor-fold>
 
-    // ================================about security================================== //
+    //<editor-fold desc="시큐리티 관련">
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<GrantedAuthority> roles = new HashSet<>();
@@ -122,6 +125,28 @@ public class Member extends BaseTimeEntity implements UserDetails {
         return true;
     }
 
-    // =============================================================================== //
+    //</editor-fold>
+
+    //<editor-fold desc="간단한 비즈니스 로직">
+
+    public void changeStyleTag(String tag) {
+        this.styleTag = tag;
+    }
+
+    public void changePassword(String pw) {
+        this.password = pw;
+    }
+
+    public void changeMemberInfo(String email, String phone, String name, String addressNumber, String address, String addressDetail) {
+        this.email = email;
+        this.phone = phone;
+        this.name = name;
+        this.addressNumber = addressNumber;
+        this.address = address;
+        this.addressDetail = addressDetail;
+    }
+
+    //</editor-fold>
+
 
 }
