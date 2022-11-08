@@ -22,10 +22,9 @@ public class Member extends BaseTimeEntity implements UserDetails {
     // 회원 아이디
     @Id
     @Column(length = 20)
-    private String MemberId;
+    private String memberId;
 
     // 비밀번호
-    @Column(length = 20)
     private String password;
 
     // 이메일
@@ -94,7 +93,7 @@ public class Member extends BaseTimeEntity implements UserDetails {
     // 아이디 반환
     @Override
     public String getUsername() {
-        return MemberId;
+        return memberId;
     }
 
     // 비밀번호 반환

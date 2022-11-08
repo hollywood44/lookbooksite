@@ -1,6 +1,6 @@
-package com.lbs.lookbooksite.configs;
+package com.lbs.configs;
 
-import com.lbs.lookbooksite.dto.service.MemberService;
+import com.lbs.lookbooksite.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -29,7 +29,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests() // 접근 관련 인증설정
                 .antMatchers().permitAll()
-                .antMatchers().hasRole("USER")
+                .antMatchers().hasRole("MEMBER")
                 .antMatchers().hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
