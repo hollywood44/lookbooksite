@@ -28,9 +28,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception{
         http
                 .authorizeRequests() // 접근 관련 인증설정
-                .antMatchers().permitAll()
-                .antMatchers().hasRole("MEMBER")
-                .antMatchers().hasRole("ADMIN")
+                .antMatchers("/**","/upload").permitAll()
+//                .antMatchers().hasRole("MEMBER")
+//                .antMatchers().hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()

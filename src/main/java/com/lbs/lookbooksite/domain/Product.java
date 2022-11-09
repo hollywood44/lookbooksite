@@ -3,10 +3,9 @@ package com.lbs.lookbooksite.domain;
 import com.lbs.lookbooksite.domain.timeEntities.BaseTimeEntity;
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "product_tbl")
@@ -38,4 +37,13 @@ public class Product extends BaseTimeEntity {
 
     // 재고
     private int stock;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "product",cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<Product_Image> productImages = new ArrayList<>();
+
+    public void addImgs(Product_Image product_image) {
+        productImages.add(product_image);
+        product_image.setBoardId(this);
+    }
 }

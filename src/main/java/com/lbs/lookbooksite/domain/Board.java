@@ -4,6 +4,8 @@ import com.lbs.lookbooksite.domain.timeEntities.BaseTimeEntity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "board_tbl")
@@ -39,9 +41,20 @@ public class Board  extends BaseTimeEntity {
     @JoinColumn(name = "memberId")
     private Member writer;
 
+    // 해당 게시글 이미지 리스트
+    @Builder.Default
+    @OneToMany(mappedBy = "board",cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<Board_Image> boardImgs = new ArrayList<>();
+
     // 해당 게시물 댓글
+    @Builder.Default
+    @OneToMany(mappedBy = "commentId")
+    private List<Comment> commentList = new ArrayList<>();
 
-
+    public void addImgs(Board_Image board_image) {
+        boardImgs.add(board_image);
+        board_image.setBoardId(this);
+    }
 
 
     //===============================비즈니스 로직===============================//

@@ -27,6 +27,9 @@ public class LookBook extends BaseTimeEntity {
     @Column(length = 50)
     private String brand;
 
+    // 저장된 사진명
+    private String storedName;
+
     // 사진 경로
     @Column(length = 100)
     private String photoUrl;
