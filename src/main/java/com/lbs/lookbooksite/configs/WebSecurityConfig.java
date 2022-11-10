@@ -28,15 +28,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception{
         http
                 .authorizeRequests() // 접근 관련 인증설정
-                .antMatchers("/**","/upload").permitAll()
-//                .antMatchers().hasRole("MEMBER")
-//                .antMatchers().hasRole("ADMIN")
+                .antMatchers("/**","/product/**","/product/upload").permitAll()
+                .antMatchers("/product/**").hasRole("MEMBER")
+                .antMatchers().hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
                 .loginPage("/member/login") // 로그인 페이지 설정
                 .loginProcessingUrl("/member/login") // form의 action url 기본값은 '/login'
-                .defaultSuccessUrl("/todo/list") // 로그인에 성공하면 이동할 페이지 설정
+                .defaultSuccessUrl("/product") // 로그인에 성공하면 이동할 페이지 설정
                 .and()
                 .logout()
                 .logoutUrl("/member/logout") //post방식의 로그아웃폼 action에 있는 주소

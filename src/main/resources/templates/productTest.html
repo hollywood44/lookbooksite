@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta charset="UTF-8">
+    <title>Product_Reg</title>
+</head>
+<body>
+
+<h1>Product Reg Test</h1>
+<div>
+    <form th:action="@{/product/upload}" method="post" enctype="multipart/form-data" name="pdtestform">
+        <sec:csrfInput />
+        <p>productId : <input type="text" name="productId"></p>
+        <p>productName : <input type="text" name="productName"></p>
+        <p>description : <input type="text" name="description"></p>
+        <p>price : <input type="text" name="price"></p>
+        <p>stock : <input type="text" name="stock"></p>
+
+        <p>Images : <input type="file" name="getImages" multiple></p>
+        <p><input type="submit" value="submit"></p>
+    </form>
+</div>
+
+
+</body>
+</html>

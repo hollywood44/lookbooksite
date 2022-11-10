@@ -28,10 +28,6 @@ public class Product extends BaseTimeEntity {
     @Column(length = 500)
     private String description;
 
-    // 상품사진 경로
-    @Column(length = 100)
-    private String photoUrl;
-
     // 가격
     private int price;
 
