@@ -132,6 +132,8 @@ public class BoardServiceImpl implements BoardService{
     public BoardDto getBoard(Long boardId) {
         Optional<Board> entity = boardRepository.findById(boardId);
         if (entity.isPresent()) {
+            entity.get().plusViewCount();
+            boardRepository.save(entity.get());
             BoardDto board = entityToDto(entity.get());
             return board;
         } else {
