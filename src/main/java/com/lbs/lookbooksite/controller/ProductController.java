@@ -25,13 +25,13 @@ public class ProductController {
     @GetMapping
     public String productTestPage() {
         return "productTest";
-    }
+    } //todo
 
     @GetMapping("/list")
     public String productListTestPage(Model model) {
         List<ProductDto> allProduct = productService.getAllProductList();
         model.addAttribute("allProduct",allProduct);
-        return "productListTest";
+        return "productListTest"; //todo
     }
 
     @PostMapping("/upload")

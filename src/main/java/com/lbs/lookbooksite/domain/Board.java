@@ -2,6 +2,8 @@ package com.lbs.lookbooksite.domain;
 
 import com.lbs.lookbooksite.domain.timeEntities.BaseTimeEntity;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -14,6 +16,7 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@DynamicInsert
 public class Board  extends BaseTimeEntity {
 
     // 게시글 번호
@@ -29,11 +32,8 @@ public class Board  extends BaseTimeEntity {
     @Column(length = 500)
     private String content;
 
-    // 게시글 사진 경로
-    @Column(length = 100)
-    private String photoUrl;
-
     // 조회수
+    @ColumnDefault("0")
     private int viewCount;
 
     // 글쓴이
@@ -48,8 +48,12 @@ public class Board  extends BaseTimeEntity {
 
     // 해당 게시물 댓글
     @Builder.Default
-    @OneToMany(mappedBy = "commentId")
+    @OneToMany(mappedBy = "targetBoard")
     private List<Comment> commentList = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "targetBoard")
+    private List<Like> likeList = new ArrayList<>();
 
     public void addImgs(Board_Image board_image) {
         boardImgs.add(board_image);

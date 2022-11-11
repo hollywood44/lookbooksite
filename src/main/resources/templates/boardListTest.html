@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Product List Test</title>
+</head>
+<body>
+
+<h1>board list</h1>
+
+<table>
+    <thead>
+    <tr>
+        <th>게시글번호</th>
+        <th>제목</th>
+        <th>내용</th>
+        <th>게시글사진</th>
+        <th>조회수</th>
+        <th>글쓴이</th>
+        <th>댓글</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="board : ${allBoard}">
+        <th th:text="${board.boardId}">게시글번호</th>
+        <th th:text="${board.title}">제목</th>
+        <th th:text="${board.content}">내용</th>
+        <th:block>
+            <th:block th:if="${#strings.isEmpty(board.returnImages)}">
+                <th>이미지없음</th>
+            </th:block>
+            <th:block th:unless="${#strings.isEmpty(board.returnImages)}">
+                <th><img th:src="${board.returnImages[0].storedPath}" style="width:50px; height:50px;"></th>
+            </th:block>
+        </th:block>
+
+        <th th:text="${board.viewCount}">조회수</th>
+        <th th:text="${board.writer}">글쓴이</th>
+        <th>댓글</th>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

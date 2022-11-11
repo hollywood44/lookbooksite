@@ -34,8 +34,8 @@ public class ProductServiceImpl implements ProductService {
     private final FileManager fileManager;
 
     // 프로퍼티에 설정해놓은 위치 사용
-    @Value("${file.upload.boardImg}")
-    private String boardFilePath;
+    @Value("${file.upload.productImg}")
+    private String productFilePath;
 
     private final ProductRepository repository;
 
@@ -44,7 +44,7 @@ public class ProductServiceImpl implements ProductService {
 
         String folderPath = str.replace("/", File.separator);
 
-        File uploadPathFolder = new File(boardFilePath, folderPath);
+        File uploadPathFolder = new File(productFilePath, folderPath);
 
         if (!uploadPathFolder.exists()) {
             uploadPathFolder.mkdirs();
@@ -73,19 +73,19 @@ public class ProductServiceImpl implements ProductService {
                 // 저장될 파일명(랜덤파일명_실제파일명)
                 String savedName = uuid + "_" + originName;
                 // 저장할 위치경로
-                Path savePath = Paths.get(boardFilePath + File.separator + makeFolder() + File.separator + savedName);
+                Path savePath = Paths.get(productFilePath + File.separator + makeFolder() + File.separator + savedName);
 
                 // 파일 업로드
                 fileManager.fileUpload(img, savePath);
 
                 // 썸네일 생성 (나중에 썸네일 가지고 오고 싶을때
                 // lastindexof "_" 위치를 "_s_"로 replace해서 사용)
-                String thumbnailSaveName = boardFilePath + File.separator + makeFolder() + File.separator + uuid + "_s_" + originName;
+                String thumbnailSaveName = productFilePath + File.separator + makeFolder() + File.separator + uuid + "_s_" + originName;
                 File thumbnailFile = new File(thumbnailSaveName);
                 Thumbnailator.createThumbnail(savePath.toFile(), thumbnailFile, 200, 200);
 
                 // /boardImg/**로 사용하기 쉽게  (/boardImg/년/월/일/파일명)으로 저장
-                int index = savePath.toString().lastIndexOf("/boardImg");
+                int index = savePath.toString().lastIndexOf("/productImg");
                 String storedPath = savePath.toString().substring(index);
 
                 Product_Image product_image = Product_Image.builder()
@@ -103,7 +103,7 @@ public class ProductServiceImpl implements ProductService {
             e.printStackTrace();
         }
 
-        return "ERROR";
+        return null;
     }
 
     // 이미지 포함안하는 업로드

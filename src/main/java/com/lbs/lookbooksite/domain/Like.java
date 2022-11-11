@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "like_tbl")
 @Builder
-@ToString
+@ToString(exclude = "targetBoard")
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
     <meta charset="UTF-8">
     <title>Board_Reg</title>
@@ -8,8 +9,13 @@
 
 <h1>Board Reg Test</h1>
 <div>
-    <form action="/board/upload" method="post" enctype="multipart/form-data" name="bdtestform">
+    <form th:action="@{/board/upload}" method="post" enctype="multipart/form-data" name="bdtestform">
+        <sec:csrfInput />
+        <p>title : <input type="text" name="title"></p>
+        <p>title : <input type="text" name="content"></p>
 
+        <p>Image : <input type="file" name="getImages" placeholder="이미지는 1개만 업로드 가능합니다." </p>
+        <p><input type="submit" value="submit"></p>
     </form>
 </div>
 
