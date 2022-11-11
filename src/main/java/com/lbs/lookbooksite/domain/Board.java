@@ -68,4 +68,10 @@ public class Board  extends BaseTimeEntity {
         this.viewCount = this.viewCount + 1;
     }
 
+    public int getLikeCount() {
+        return this.likeList.size();
+    }
+    public int getCommentCount() {
+        return this.commentList.size();
+    }
 }

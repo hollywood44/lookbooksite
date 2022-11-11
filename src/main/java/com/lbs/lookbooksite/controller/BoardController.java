@@ -8,6 +8,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,6 +33,21 @@ public class BoardController {
         List<BoardDto> allBoard = boardService.getAllBoardList();
         model.addAttribute("allBoard", allBoard);
         return "boardListTest"; // todo
+    }
+
+    @GetMapping("/detail/{boardId}")
+    public String boardDetail(Model model, @PathVariable("boardId") Long boardId) {
+        BoardDto board = boardService.getBoard(boardId);
+        model.addAttribute("board", board);
+
+        return "board_detail";
+    }
+
+    @GetMapping("/like/{boardId}")
+    public String boardLike(@PathVariable("boardId") Long boardId,@AuthenticationPrincipal Member loginedMember) {
+        boardService.likeBoard(loginedMember,boardId);
+
+        return String.format("redirect:/board/detail/%s", boardId);
     }
 
     @PostMapping("/upload")

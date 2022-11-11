@@ -1,11 +1,10 @@
 package com.lbs.lookbooksite.service;
 
 import com.lbs.lookbooksite.configs.FileManager;
-import com.lbs.lookbooksite.domain.Board;
-import com.lbs.lookbooksite.domain.Board_Image;
-import com.lbs.lookbooksite.domain.Product_Image;
+import com.lbs.lookbooksite.domain.*;
 import com.lbs.lookbooksite.dto.board.BoardDto;
 import com.lbs.lookbooksite.repository.BoardRepository;
+import com.lbs.lookbooksite.repository.LikeRepository;
 import lombok.RequiredArgsConstructor;
 import net.coobird.thumbnailator.Thumbnailator;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,6 +18,7 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -34,6 +34,7 @@ public class BoardServiceImpl implements BoardService{
     private String boardFilePath;
 
     private final BoardRepository boardRepository;
+    private final LikeRepository likeRepository;
 
     public String makeFolder() {
         String str = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
@@ -116,7 +117,7 @@ public class BoardServiceImpl implements BoardService{
 
     @Override
     public List<BoardDto> getAllBoardList() {
-        Function<Board, BoardDto> fn = (entity -> (entityToDto(entity)));
+        Function<Board, BoardDto> fn = (entity -> (entityToDtoNoneDetail(entity)));
         List<BoardDto> allBoard = null;
         List<Board> entityList = boardRepository.findAll();
 
@@ -127,8 +128,34 @@ public class BoardServiceImpl implements BoardService{
         }
     }
 
+    @Override
+    public BoardDto getBoard(Long boardId) {
+        Optional<Board> entity = boardRepository.findById(boardId);
+        if (entity.isPresent()) {
+            BoardDto board = entityToDto(entity.get());
+            return board;
+        } else {
+            return null;
+        }
+    }
 
     //</editor-fold>
+
+    public void likeBoard(Member member, Long boardId) {
+        Board board = boardRepository.findById(boardId).get();
+        Optional<Like> like = likeRepository.findByTargetBoardAndLikedMember(board, member);
+
+        if (like.isPresent()) {
+            likeRepository.deleteById(like.get().getLikeId());
+        } else {
+            Like newLike = Like.builder()
+                    .likedMember(member)
+                    .targetBoard(board)
+                    .build();
+            likeRepository.save(newLike);
+        }
+    }
+
 
 
 }

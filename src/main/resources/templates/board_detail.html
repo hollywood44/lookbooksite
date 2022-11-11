@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Board Detail</title>
+</head>
+<body>
+<p><span th:text="|boardId : ${board.boardId}|"></span><span th:text="|writer : ${board.writer}|"></span></p>
+<h1 th:text="${board.title}">title</h1>
+<p th:text="${board.content}">content</p>
+<div th:if="${not #strings.isEmpty(board.returnImages)}">
+    <img th:src="${board.returnImages[0].storedPath}">
+</div>
+<p>
+    <span th:text="|viewCount : ${board.viewCount}|"></span>
+    <span th:text="|likeCount : ${board.likeCount}|"></span>
+</p>
+<div>
+        <th:block th:if="${not #strings.isEmpty(board.commentList)}" th:each="comment : ${board.commentList}">
+            <p>
+                <span th:text="${comment.comment}"></span>
+                <span th:text="| commenter : ${comment.commenter}|"></span>
+            </p>
+        </th:block>
+</div>
+<p><a th:href="@{|/board/like/${board.boardId}|}">like</a></p>
+</body>
+</html>

@@ -26,10 +26,14 @@ public class BoardDto {
     private Long boardId;
     private String title;
     private String content;
-    private int viewCount;
+    private Integer viewCount;
     private String writer;
+
     private List<MultipartFile> getImages;
     private List<Board_ImageDto> returnImages;
     private List<CommentDto> commentList;
+
+    private int likeCount;
+    private int commentCount;
 
 }

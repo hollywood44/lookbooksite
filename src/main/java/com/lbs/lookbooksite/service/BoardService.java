@@ -21,6 +21,7 @@ public interface BoardService {
         return entity;
     }
 
+    // 상세보기에서 쓸거
     default BoardDto entityToDto(Board entity) {
         List<Board_ImageDto> dtoImages = new ArrayList<>();
 
@@ -43,7 +44,22 @@ public interface BoardService {
                 .viewCount(entity.getViewCount())
                 .writer(entity.getWriter().getMemberId())
                 .returnImages(dtoImages)
+                .commentCount(entity.getCommentCount())
+                .likeCount(entity.getLikeCount())
                 // todo comment 추가해야함
+                .build();
+        return dto;
+    }
+
+    // 리스트보기에서 쓸거
+    default BoardDto entityToDtoNoneDetail(Board entity) {
+        BoardDto dto = BoardDto.builder()
+                .boardId(entity.getBoardId())
+                .title(entity.getTitle())
+                .viewCount(entity.getViewCount())
+                .writer(entity.getWriter().getMemberId())
+                .commentCount(entity.getCommentCount())
+                .likeCount(entity.getLikeCount())
                 .build();
         return dto;
     }
@@ -56,5 +72,7 @@ public interface BoardService {
 
     List<BoardDto> getAllBoardList();
 
+    BoardDto getBoard(Long boardId);
 
+    void likeBoard(Member member, Long boardId);
 }
