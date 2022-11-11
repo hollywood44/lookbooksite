@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
     <meta charset="UTF-8">
     <title>Board Detail</title>
@@ -24,5 +25,13 @@
         </th:block>
 </div>
 <p><a th:href="@{|/board/like/${board.boardId}|}">like</a></p>
+<div>
+    <form th:action="@{|/board/comment/${board.boardId}|}" method="post" name="commentForm">
+        <sec:csrfInput />
+        <input type="text" name="comment">
+        <input type="submit" value="comment!!">
+    </form>
+</div>
+
 </body>
 </html>

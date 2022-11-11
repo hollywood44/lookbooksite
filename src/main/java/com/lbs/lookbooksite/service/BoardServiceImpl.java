@@ -3,11 +3,16 @@ package com.lbs.lookbooksite.service;
 import com.lbs.lookbooksite.configs.FileManager;
 import com.lbs.lookbooksite.domain.*;
 import com.lbs.lookbooksite.dto.board.BoardDto;
+import com.lbs.lookbooksite.dto.board.CommentDto;
 import com.lbs.lookbooksite.repository.BoardRepository;
+import com.lbs.lookbooksite.repository.CommentRepository;
 import com.lbs.lookbooksite.repository.LikeRepository;
 import lombok.RequiredArgsConstructor;
 import net.coobird.thumbnailator.Thumbnailator;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,6 +40,7 @@ public class BoardServiceImpl implements BoardService{
 
     private final BoardRepository boardRepository;
     private final LikeRepository likeRepository;
+    private final CommentRepository commentRepository;
 
     public String makeFolder() {
         String str = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
@@ -129,6 +135,16 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
+    public Page<BoardDto> getAllBoardList(int page) {
+        Function<Board, BoardDto> fn = (entity -> (entityToDtoNoneDetail(entity)));
+        Pageable pageable = PageRequest.of(page,10); // page(번호)부터 10개씩 잘라서 보겠다
+        Page<Board> entityList = boardRepository.findAll(pageable);
+
+        Page<BoardDto> boardList = entityList.map(fn);
+        return boardList;
+    }
+
+    @Override
     public BoardDto getBoard(Long boardId) {
         Optional<Board> entity = boardRepository.findById(boardId);
         if (entity.isPresent()) {
@@ -158,6 +174,18 @@ public class BoardServiceImpl implements BoardService{
         }
     }
 
+    @Override
+    public void postComment(CommentDto commentDto,Member commenter,Long boardId) {
+        Board board = boardRepository.findById(boardId).get();
+
+        Comment putComment = Comment.builder()
+                .comment(commentDto.getComment())
+                .commenter(commenter)
+                .targetBoard(board)
+                .build();
+
+        commentRepository.save(putComment);
+    }
 
 
 }

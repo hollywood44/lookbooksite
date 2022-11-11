@@ -3,8 +3,10 @@ package com.lbs.lookbooksite.service;
 import com.lbs.lookbooksite.domain.*;
 import com.lbs.lookbooksite.dto.board.BoardDto;
 import com.lbs.lookbooksite.dto.board.Board_ImageDto;
+import com.lbs.lookbooksite.dto.board.CommentDto;
 import com.lbs.lookbooksite.dto.product.ProductDto;
 import com.lbs.lookbooksite.dto.product.Product_ImageDto;
+import org.springframework.data.domain.Page;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +26,7 @@ public interface BoardService {
     // 상세보기에서 쓸거
     default BoardDto entityToDto(Board entity) {
         List<Board_ImageDto> dtoImages = new ArrayList<>();
+        List<CommentDto> commentDtoList = new ArrayList<>();
 
         if (!entity.getBoardImgs().isEmpty()) {
             for (Board_Image entityImg : entity.getBoardImgs()) {
@@ -37,6 +40,18 @@ public interface BoardService {
             dtoImages = null;
         }
 
+        if (entity.getCommentCount() > 0) {
+            for (Comment cEntity : entity.getCommentList()) {
+                CommentDto cDto = CommentDto.builder()
+                        .comment(cEntity.getComment())
+                        .commenter(cEntity.getCommenter().getMemberId())
+                        .build();
+                commentDtoList.add(cDto);
+            }
+        } else {
+            commentDtoList = null;
+        }
+
         BoardDto dto = BoardDto.builder()
                 .boardId(entity.getBoardId())
                 .title(entity.getTitle())
@@ -46,7 +61,7 @@ public interface BoardService {
                 .returnImages(dtoImages)
                 .commentCount(entity.getCommentCount())
                 .likeCount(entity.getLikeCount())
-                // todo comment 추가해야함
+                .commentList(commentDtoList)
                 .build();
         return dto;
     }
@@ -75,4 +90,8 @@ public interface BoardService {
     BoardDto getBoard(Long boardId);
 
     void likeBoard(Member member, Long boardId);
+
+    void postComment(CommentDto commentDto,Member commenter,Long boardId);
+
+    Page<BoardDto> getAllBoardList(int page);
 }
