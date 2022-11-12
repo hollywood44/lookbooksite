@@ -22,6 +22,7 @@ public class MemberServiceImpl implements MemberService{
     public String signup(MemberDto dto) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         dto.setPassword(encoder.encode(dto.getPassword()));
+        System.out.println("service" + dtoToEntity(dto));
         return repository.save(dtoToEntity(dto)).getMemberId();
     }
 
@@ -43,7 +44,7 @@ public class MemberServiceImpl implements MemberService{
         Member member = repository.findById(changeInfo.getMemberId())
                 .orElseThrow(() -> new UsernameNotFoundException("아이디를 찾을 수 없습니다!"));
 
-        member.changeMemberInfo(changeInfo.getEmail(), changeInfo.getPhone(), changeInfo.getName(), changeInfo.getAddressNumber(), changeInfo.getAddress(), changeInfo.getAddressDetail());
+        member.changeMemberInfo(changeInfo.getEmail(), changeInfo.getPhone(), changeInfo.getName(), changeInfo.getAddress(), changeInfo.getAddressDetail());
 
         repository.save(member);
 

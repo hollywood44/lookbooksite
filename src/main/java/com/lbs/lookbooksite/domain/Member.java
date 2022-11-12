@@ -52,10 +52,6 @@ public class Member extends BaseTimeEntity implements UserDetails {
     @Column(length = 10)
     private String gender;
 
-    // 우편번호
-    @Column(length = 20)
-    private String addressNumber;
-
     // 주소
     @Column(length = 100)
     private String address;
@@ -137,11 +133,10 @@ public class Member extends BaseTimeEntity implements UserDetails {
         this.password = pw;
     }
 
-    public void changeMemberInfo(String email, String phone, String name, String addressNumber, String address, String addressDetail) {
+    public void changeMemberInfo(String email, String phone, String name, String address, String addressDetail) {
         this.email = email;
         this.phone = phone;
         this.name = name;
-        this.addressNumber = addressNumber;
         this.address = address;
         this.addressDetail = addressDetail;
     }

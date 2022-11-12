@@ -17,10 +17,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final MemberService service;
 
-    // 인증을 무시할 경로 지정(css,js,img  ->  인증 무시)
+    // 인증을 무시할 경로 지정
     @Override
     public void configure(WebSecurity webSecurity) {
-        webSecurity.ignoring().antMatchers("/css/**","/js/***","/img/**");
+        webSecurity.ignoring().antMatchers("/css/**","/js/***","/assets/**");
     }
 
     // http 관련 인증 설정
@@ -28,15 +28,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception{
         http
                 .authorizeRequests() // 접근 관련 인증설정
-                .antMatchers("/**","/product/**","/product/upload","/board/**").permitAll()
-                .antMatchers("/product/**","/board/**").hasRole("MEMBER")
+                .antMatchers("/**","/product/**","/product/upload","/board/**","member/**").permitAll()
+                .antMatchers("/product/**","/board/**","/member/**").hasRole("MEMBER")
                 .antMatchers().hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
-                .loginPage("/member/login") // 로그인 페이지 설정
-                .loginProcessingUrl("/member/login") // form의 action url 기본값은 '/login'
-                .defaultSuccessUrl("/product") // 로그인에 성공하면 이동할 페이지 설정
+                .loginPage("/member/signIn") // 로그인 페이지 설정
+                .loginProcessingUrl("/member/signIn") // form의 action url 기본값은 '/login'
+                .defaultSuccessUrl("/member/main") // 로그인에 성공하면 이동할 페이지 설정
                 .and()
                 .logout()
                 .logoutUrl("/member/logout") //post방식의 로그아웃폼 action에 있는 주소

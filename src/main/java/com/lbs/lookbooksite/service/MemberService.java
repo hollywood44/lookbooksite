@@ -6,11 +6,16 @@ import lombok.Builder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 @Service
 public interface MemberService extends UserDetailsService {
 
+    // 회원가입 사용
     default Member dtoToEntity(MemberDto dto) {
-        String tags = String.join("#", dto.getStyleTag());
+        //String tags = String.join("#", dto.getStyleTag());
+        LocalDate date = LocalDate.parse(dto.getBirth(), DateTimeFormatter.ISO_DATE);
 
         Member entity = Member.builder()
                 .memberId(dto.getMemberId())
@@ -18,13 +23,11 @@ public interface MemberService extends UserDetailsService {
                 .email(dto.getEmail())
                 .phone(dto.getPhone())
                 .name(dto.getName())
-                .birth(dto.getBirth())
+                .birth(date)
                 .auth(dto.getAuth())
                 .gender(dto.getGender())
-                .addressNumber(dto.getAddressNumber())
                 .address(dto.getAddress())
                 .addressDetail(dto.getAddressDetail())
-                .styleTag(tags)
                 .build();
         return entity;
     }
