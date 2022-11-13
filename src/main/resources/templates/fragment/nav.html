@@ -1,32 +1,75 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <!-- Navigation-->
-<nav class="navbar navbar-expand-lg navbar-light bg-light" th:fragment="navFragment">
+<nav class="navbar navbar-expand-lg navbar-light bg-light" style="height:56px;" th:fragment="navFragment">
     <div class="container px-4 px-lg-5">
-        <a class="navbar-brand" href="#!">Start Bootstrap</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-                <li class="nav-item"><a class="nav-link active" aria-current="page" href="#!">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="#!">About</a></li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Shop</a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="#!">All Products</a></li>
-                        <li><hr class="dropdown-divider" /></li>
-                        <li><a class="dropdown-item" href="#!">Popular Items</a></li>
-                        <li><a class="dropdown-item" href="#!">New Arrivals</a></li>
-                    </ul>
-                </li>
+      <div class="navbar" id="navbarSupportedContent1">
+        <a class="navbar-brand" href="#!">Let's LooKBooK</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span
+            class="navbar-toggler-icon"></span></button>
+        <ul class="navbar-nav mb-2 mb-lg-0 ms-lg-4">
+          <li class="nav-item"><a class="nav-link active" aria-current="page" href="/member/main">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="#!">LookBook</a></li>
+          <li class="nav-item"><a class="nav-link" href="#!">Product</a></li>
+          <li class="nav-item"><a class="nav-link" href="#!">Board</a></li>
+          </li>
+        </ul>
+      </div>
+      <div class="navbar" id="navbarSupportedContent2">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+          <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
+            <!-- 로그인되있다면 활성화 -->
+            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false" th:text="${#authentication.name}" >My_ID_Here</a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" href="#!"><i class="bi bi-cart"></i> Cart</a></li>
+              <li><a class="dropdown-item" href="#!"><i class="bi bi-wallet"></i> Order</a></li>
+              <li><hr class="dropdown-divider" /></li>
+              <li><a class="dropdown-item" href="#!">MyBoard</a></li>
+              <li><a class="dropdown-item" href="#!">AccountSetting</a></li>
+              <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#signOutModal" href="#">SignOut</a></li>
             </ul>
-            <form class="d-flex" sec:authorize="isAuthenticated()">
-                <button class="btn btn-outline-dark" type="submit">
-                    <i class="bi-cart-fill me-1"></i>
-                    Cart
-                    <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
-                </button>
-            </form>
-        </div>
+          </li>
+        </ul>
+        <!-- 로그인 되어 있지 않다면 활성화 -->
+        <ul class="navbar-nav mb-2 mb-lg-0 ms-lg-4" sec:authorize="isAnonymous()">
+          <li class="nav-item"><a class="nav-link" href="/member/signIn">SignIn</a></li>
+        </ul>
+  
+      </div>
     </div>
-</nav>
+
+  <!-- signOut Modal -->
+  <div class="modal fade" id="signOutModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">SignOut</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          로그아웃 하시겠습니까?
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <form th:action="@{/member/signOut}" method="post" >
+            <sec:csrfInput />
+            <input type="submit" value="Yes" class="btn btn-danger" />
+          </form>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">No</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  </nav>
 </html>

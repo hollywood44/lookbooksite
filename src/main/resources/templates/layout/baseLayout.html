@@ -1,8 +1,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
->
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 
 <head>
   <meta charset="UTF-8">
@@ -18,11 +17,12 @@
   <link href="/css/styles.css" rel="stylesheet" />
   <title>layout Page</title>
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
+<!-- 네비게이션 -->
 <nav th:replace="fragment/nav :: navFragment"></nav>
 
 
-<th:block layout:fragment="content"></th:block>
+<section layout:fragment="content" style="flex:1;"></section>
 
 <!-- 푸터 -->
 <footer th:replace="fragment/footer :: footerFragment"></footer>

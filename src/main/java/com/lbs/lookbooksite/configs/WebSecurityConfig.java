@@ -39,8 +39,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .defaultSuccessUrl("/member/main") // 로그인에 성공하면 이동할 페이지 설정
                 .and()
                 .logout()
-                .logoutUrl("/member/logout") //post방식의 로그아웃폼 action에 있는 주소
-                .logoutSuccessUrl("/member/login") // 로그아웃 성공하면 이동할 주소
+                .logoutUrl("/member/signOut") //post방식의 로그아웃폼 action에 있는 주소
+                .logoutSuccessUrl("/member/main") // 로그아웃 성공하면 이동할 주소
                 .invalidateHttpSession(true)
                 .and()
                 .exceptionHandling()
