@@ -35,3 +35,8 @@ out/
 
 ### VS Code ###
 .vscode/
+/src/main/resources/static/assets/athleisure_style.webp
+/src/main/resources/static/assets/minimal.jpg
+/src/main/resources/static/assets/amecasi_style.jpeg
+/src/main/resources/static/assets/preppyLook_style.png
+/src/main/resources/static/assets/street_style.jpeg
