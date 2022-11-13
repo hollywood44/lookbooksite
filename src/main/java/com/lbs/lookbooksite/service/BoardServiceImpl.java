@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -137,7 +138,8 @@ public class BoardServiceImpl implements BoardService{
     @Override
     public Page<BoardDto> getAllBoardList(int page) {
         Function<Board, BoardDto> fn = (entity -> (entityToDtoNoneDetail(entity)));
-        Pageable pageable = PageRequest.of(page,10); // page(번호)부터 10개씩 잘라서 보겠다
+        Sort sort = Sort.by("boardId").descending();
+        Pageable pageable = PageRequest.of(page,10,sort); // page(번호)부터 10개씩 잘라서 보겠다
         Page<Board> entityList = boardRepository.findAll(pageable);
 
         Page<BoardDto> boardList = entityList.map(fn);

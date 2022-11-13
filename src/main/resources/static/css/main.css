@@ -1,0 +1,22 @@
+#main-div{
+    height: 94vh;
+}
+
+#main-section{
+    background-color:black;
+}
+#main-page-carousel{
+    height: 100%;
+}
+
+.carousel-inner{
+    height: 100%;
+    background-color: black;
+}
+.carousel-inner img{
+    object-fit: cover;height: 100%;
+}
+
+.carousel-item{
+    height: 100%;
+}

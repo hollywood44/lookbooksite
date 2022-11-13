@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/baseLayout}"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta charset="UTF-8">
+    <title>게시판 페이지</title>
+    <link href="/css/board.css" rel="stylesheet" />
+</head>
+<body>
+<th:block layout:fragment="content">
+
+    <section style="flex:1;" id="main-section">
+        <div class="container" id="board-container">
+        
+          <form class="row my-3 mt-3 mb-5 justify-content-center" action="#f" method="get">
+            <div class="col-2">
+              <select class="form-select" aria-label="Default select">
+                <option selected>검색조건</option>
+                <option value="all">전부</option>
+                <option value="title">제목</option>
+                <option value="content">내용</option>
+                <option value="writer">작성자</option>
+              </select>
+            </div>
+        
+            <div class="col-3">
+              <div class="input-group">
+                <input type="text" id="searchbar-board" class="form-control"/>
+              </div>
+            </div>
+          </form>
+
+          <div id="board-posting-btn" class="text-end me-5" >
+            <a class="btn btn-primary" href="/board/upload">글쓰기</a>
+          </div>
+        
+          <div class="row mt-2 mb-4 justify-content-center text-center">
+            <div class="col-1">num</div>
+            <div class="col-6">title</div>
+            <div class="col-2">writer</div>
+            <div class="col-1">likeC</div>
+            <div class="col-1">viewC</div>
+            <hr class="dropdown-divider" style="width: 90%;" />
+          </div>
+
+          <th:block th:if="${not #strings.isEmpty(paging)}">
+            <div th:each="board : ${paging}" class="row mt-3 mb-3 justify-content-center text-center">
+              <div class="col-1" th:text="${board.boardId}">num</div>
+              <div class="col-6"><a th:text="${board.title}" th:href="@{|/board/detail/${board.boardId}|}">제목</a></div>
+              <div class="col-2" th:text="${board.writer}">writer</div>
+              <div class="col-1" th:text="${board.likeCount}">likeC</div>
+              <div class="col-1" th:text="${board.viewCount}">viewC</div>
+            </div>
+          </th:block>
+
+          <th:block th:if="${not #strings.isEmpty(paging)}">
+            <nav aria-label="Page navigation" id="board-pagenation">
+              <ul class="pagination justify-content-center">
+
+                <li class="page-item">
+                  <a class="page-link" th:href="@{|?page=${paging.number}|}">Prev</a>
+                </li>
+
+                <li class="page-item"
+                    th:each="page : ${#numbers.sequence(1,paging.totalPages)}"
+                    th:if="${page >= paging.number-5 and page <= paging.number+5}"
+                    th:style="${page-1 == paging.number  ? 'disabled' : ''}">
+                  <a class="page-link"
+                     th:text="${page}"
+                     th:href="@{|?page=${page}|}">1</a>
+                </li>
+
+                <li class="page-item">
+                  <a class="page-link" th:href="@{|?page=${paging.number+2}|}">Next</a>
+                </li>
+
+              </ul>
+            </nav>
+          </th:block>
+
+        </div>
+        </section>
+
+</th:block>
+</body>
+</html>

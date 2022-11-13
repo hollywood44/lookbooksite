@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/baseLayout}"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta charset="UTF-8">
+    <title>게시판 글쓰기 페이지</title>
+    <link href="/css/board.css" rel="stylesheet" />
+</head>
+<body>
+<th:block layout:fragment="content">
+
+    <section style="flex:1;" id="main-section">
+        <div class="container" id="board-post-div">
+
+
+
+            <form class="row" th:action="@{/board/upload}" method="post" enctype="multipart/form-data" th:object="${boardDto}">
+                <div th:replace="fragment/form_errors :: formErrorsFragment"></div>
+                <sec:csrfInput />
+                <div class="input-group justify-content-center">
+                    <div class="col-8">
+                        <input type="text" class="form-control" placeholder="title" th:field="*{title}" />
+                    </div>
+                </div>
+
+                <div class="input-group justify-content-center mt-4">
+                    <div class="col-8">
+                        <textarea class="form-control" placeholder="content" id="board-posting-content" th:field="*{content}"></textarea>
+                    </div>
+                </div>
+
+                <div class="input-group justify-content-center mt-4">
+                    <div class="col-8">
+                        <input class="form-control" type="file" id="formFile" th:field="*{getImages}">
+                    </div>
+                </div>
+
+                <div class="input-group justify-content-center mt-4">
+                    <div class="col-8" id="board-submit">
+                        <input type="submit" value="등록" class="btn btn-secondary">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+
+</th:block>
+</body>
+</html>

@@ -1,0 +1,33 @@
+#main-section{
+    background-color:white;
+    position: relative;
+}
+
+#board-container{
+    padding-top: 12px;
+    background-color: white;
+    min-height: 94vh;
+}
+
+#board-post-div{
+    background-color: white;
+    min-height: 94vh;
+    padding: 10vh;
+}
+
+
+#board-pagenation{
+    position: absolute;
+    bottom: 0;
+    transform: translate(50%,-30%);
+    right: 50%;
+}
+
+#board-posting-content{
+    height: 500px;
+    resize: none;
+}
+
+#board-submit{
+    text-align-last: right;
+}

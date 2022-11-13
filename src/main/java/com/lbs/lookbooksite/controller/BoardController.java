@@ -1,6 +1,7 @@
 package com.lbs.lookbooksite.controller;
 
 import com.lbs.lookbooksite.domain.Member;
+import com.lbs.lookbooksite.dto.MemberDto;
 import com.lbs.lookbooksite.dto.board.BoardDto;
 import com.lbs.lookbooksite.dto.board.CommentDto;
 import com.lbs.lookbooksite.service.BoardService;
@@ -10,9 +11,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.List;
@@ -38,10 +41,11 @@ public class BoardController {
 
     // 게시글 리스트(paging o)
     @GetMapping("/list")
-    public String boardListPage(Model model, @RequestParam(value = "page", defaultValue = "0") int page) {
+    public String boardListPage(Model model, @RequestParam(value = "page", defaultValue = "1") int page) {
+        page = page -1;
         Page<BoardDto> paging = boardService.getAllBoardList(page);
         model.addAttribute("paging", paging);
-        return "boardListTest";
+        return "member/board/boardList_page";
     }
 
 
@@ -63,13 +67,23 @@ public class BoardController {
         return String.format("redirect:/board/detail/%s", boardId);
     }
 
+    // 게시글 쓰기 페이지
+    @GetMapping("/upload")
+    public String uploadBoardPage(BoardDto boardDto) {
+        return "member/board/boardPost_page";
+    }
 
     // 게시글 등록
     @PostMapping("/upload")
-    public String uploadBoard(BoardDto uploadBoard, @AuthenticationPrincipal Member loginedMember) {
+    public String uploadBoard(@Valid BoardDto boardDto, BindingResult bindingResult, @AuthenticationPrincipal Member loginedMember) {
+        // title content 비어있는지 체크
+        if (bindingResult.hasErrors()) {
+            return "member/board/boardPost_page";
+        }
+
         // 들어온 파일이 이미지가 아니거나, 비어있을 경우 체크
         int checkFileIsNull = 0;
-        for (MultipartFile img : uploadBoard.getGetImages()) {
+        for (MultipartFile img : boardDto.getGetImages()) {
             File checkfile = new File(img.getOriginalFilename());
             String type = null;
             try {
@@ -83,12 +97,12 @@ public class BoardController {
                 checkFileIsNull = 1;
             }
         }
-        uploadBoard.setWriter(loginedMember.getMemberId());
+        boardDto.setWriter(loginedMember.getMemberId());
 
         if (checkFileIsNull == 0) {
-            boardService.uploadBoardWithOutImg(uploadBoard);
+            boardService.uploadBoardWithOutImg(boardDto);
         } else {
-            boardService.uploadBoardWithImg(uploadBoard);
+            boardService.uploadBoardWithImg(boardDto);
         }
 
         return "redirect:/board/list";

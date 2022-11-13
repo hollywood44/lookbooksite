@@ -4,8 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 @Data
@@ -24,8 +27,13 @@ public class BoardDto {
      * 댓글 리스트(get)
      */
     private Long boardId;
+
+    @NotEmpty(message = "제목은 필수사항입니다.")
     private String title;
+
+    @NotEmpty(message = "본문은 필수사항입니다.")
     private String content;
+
     private Integer viewCount;
     private String writer;
 
