@@ -55,8 +55,7 @@ public class BoardController {
     public String boardDetail(Model model, @PathVariable("boardId") Long boardId) {
         BoardDto board = boardService.getBoard(boardId);
         model.addAttribute("board", board);
-
-        return "board_detail";
+        return "/member/board/boardDetail_page";
     }
 
     // 게시글 좋아요
@@ -98,6 +97,9 @@ public class BoardController {
             }
         }
         boardDto.setWriter(loginedMember.getMemberId());
+
+        boardDto.setContent(boardDto.getContent().replace("\n","<br>"));
+
 
         if (checkFileIsNull == 0) {
             boardService.uploadBoardWithOutImg(boardDto);

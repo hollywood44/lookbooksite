@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/baseLayout}"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta charset="UTF-8">
+    <title>섹션안에 내용</title>
+    <link href="/css/board.css" rel="stylesheet" />
+</head>
+<body>
+<th:block layout:fragment="content">
+
+    <section style="flex:1;" id="main-section">
+        <div class="container main-section">
+
+            <div class="main-wrapper">
+
+                <div class="row boardD-titleS">
+                    <h1 class="col-10 board-item" th:text="${board.title}">title</h1>
+                    <!--                            todo disabled-->
+                    <a class="col-2 btn" th:href="@{|/board/like/${board.boardId}|}">추천</a>
+                    <div class="col-10 board-item" th:text="|작성자 : ${board.writer}|">작성자 : writer</div>
+                    <div class="col-10 board-item" th:text="|작성일 : ${#temporals.format(board.regDate, 'yyyy-MM-dd HH:mm')}|">작성일 : 2022-11-11</div>
+                    <div class="col-10 board-item" th:text="|수정일 : ${#temporals.format(board.modDate, 'yyyy-MM-dd HH:mm')}|">수정일 : 2022-11-12</div>
+                </div>
+
+
+                <div class="boardD-contentS">
+                    <div class="board-item" th:utext="${board.content}">
+                        이 사진 어떰?<br>
+                        괜찮은거 같아 보이지 않아요?<br>
+                    </div>
+                    <th:block th:if="${not #strings.isEmpty(board.returnImages)}">
+                        <img th:src="${board.returnImages[0].storedPath}" alt="#" class="boardD-img">
+                    </th:block>
+
+                    <div class="text-end counting" th:text="|조회수:${board.viewCount} 추천수:${board.likeCount}|">조회수:100 <br> 추천수:10</div>
+                </div>
+
+                <div class="boardD-comment">
+                    <form th:action="@{|/board/comment/${board.boardId}|}" method="post">
+                        <div class="input-group mb-3">
+                            <sec:csrfInput />
+<!--                            todo disabled-->
+                            <input type="text" name="comment" class="form-control" placeholder="댓글작성" aria-label="Recipient's username" aria-describedby="button-addon2" id="com-input">
+                            <button class="btn btn-outline-secondary" type="submit" id="com-btn">댓글달기</button>
+                        </div>
+                    </form>
+
+                    <div>
+                        <p th:each="comment : ${board.commentList}" th:text="|${comment.commenter} : ${comment.comment}|">작성자1 : com1</p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+</th:block>
+</body>
+</html>

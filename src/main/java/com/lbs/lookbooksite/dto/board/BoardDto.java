@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotEmpty;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -36,6 +37,9 @@ public class BoardDto {
 
     private Integer viewCount;
     private String writer;
+
+    private LocalDateTime regDate;
+    private LocalDateTime modDate;
 
     private List<MultipartFile> getImages;
     private List<Board_ImageDto> returnImages;

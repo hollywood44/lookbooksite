@@ -62,6 +62,8 @@ public interface BoardService {
                 .commentCount(entity.getCommentCount())
                 .likeCount(entity.getLikeCount())
                 .commentList(commentDtoList)
+                .regDate(entity.getRegDate())
+                .regDate(entity.getModDate())
                 .build();
         return dto;
     }

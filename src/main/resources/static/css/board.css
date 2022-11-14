@@ -31,3 +31,56 @@
 #board-submit{
     text-align-last: right;
 }
+
+/* boardDetail */
+.main-section{
+    background-color: white;
+    min-height: 94vh;
+    padding: 10vh;
+}
+
+.main-wrapper{
+    padding: 20px;
+    border: 1px solid rgb(212, 212, 212);
+    border-radius: 10px;
+}
+
+.boardD-titleS{
+    border-bottom: 1px solid rgb(212, 212, 212);
+    padding-bottom: 10px;
+}
+.boardD-titleS .btn{
+    width: 8%;
+    height: 5%;
+    background-color: rgb(212, 212, 212);}
+
+.boardD-contentS{
+    margin-top: 30px;
+}
+
+.boardD-img{
+    width: 100%;
+    height: 300px;
+    object-fit: contain;
+}
+
+.boardD-comment{
+    margin-top: 20px;
+    padding-top: 10px;
+    border-top: 1px solid rgb(212, 212, 212);
+}
+
+.counting{
+    color:rgb(77, 77, 77);
+}
+
+#com-input {
+    position: relative;
+    width: 80vh;
+}
+
+#com-btn {
+    position: absolute;
+    right: 0%;
+    top: 0%;
+}
