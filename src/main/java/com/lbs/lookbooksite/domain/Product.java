@@ -1,6 +1,7 @@
 package com.lbs.lookbooksite.domain;
 
 import com.lbs.lookbooksite.domain.timeEntities.BaseTimeEntity;
+import com.lbs.lookbooksite.dto.product.ProductDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -38,8 +39,28 @@ public class Product extends BaseTimeEntity {
     @OneToMany(mappedBy = "product",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Product_Image> productImages = new ArrayList<>();
 
+    //<editor-fold desc="메소드">
+    // 상품업로드만으로 사진도 같이 업로드 하려고 사용
+    // 상품이미지를 추가하고, 상품이미지 엔티티에 product에 해당 상품 세팅
     public void addImgs(Product_Image product_image) {
         productImages.add(product_image);
         product_image.setBoardId(this);
     }
+
+    // 재고 변경
+    public void changeStock(int stockC){
+        this.stock = stockC;
+    }
+
+
+    // 상품 수정
+    public void modifyProduct(ProductDto modify) {
+        this.productName = modify.getProductName();
+        this.description = modify.getDescription();
+        this.price = modify.getPrice();
+        this.stock = modify.getStock();
+    }
+
+    //</editor-fold>
+
 }

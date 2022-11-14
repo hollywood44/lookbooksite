@@ -25,6 +25,7 @@ public interface ProductService {
         return entity;
     }
 
+
     default ProductDto entityToDTO(Product entity) {
         List<Product_ImageDto> dtoImages = new ArrayList<>();
 
@@ -54,4 +55,6 @@ public interface ProductService {
 
     List<ProductDto> getAllProductList();
 
+    String modifyProduct(ProductDto dto);
+    String modifyProductWithOutImg(ProductDto dto);
 }

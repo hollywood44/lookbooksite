@@ -5,8 +5,10 @@ import com.lbs.lookbooksite.domain.Board_Image;
 import com.lbs.lookbooksite.domain.Product;
 import com.lbs.lookbooksite.domain.Product_Image;
 import com.lbs.lookbooksite.dto.product.ProductDto;
+import com.lbs.lookbooksite.dto.product.Product_ImageDto;
 import com.lbs.lookbooksite.repository.BoardRepository;
 import com.lbs.lookbooksite.repository.ProductRepository;
+import com.lbs.lookbooksite.repository.Product_ImageRepository;
 import lombok.RequiredArgsConstructor;
 import net.coobird.thumbnailator.Thumbnailator;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,7 +40,7 @@ public class ProductServiceImpl implements ProductService {
     private String productFilePath;
 
     private final ProductRepository repository;
-
+    private final Product_ImageRepository imageRepository;
     public String makeFolder() {
         String str = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
 
@@ -135,6 +137,68 @@ public class ProductServiceImpl implements ProductService {
         } else {
             return allProduct;
         }
+    }
+
+    // 상품 수정 이미지 포함
+    @Override
+    public String modifyProduct(ProductDto dto) {
+        Product modiProduct = repository.findById(dto.getProductId()).get();
+
+        if(!modiProduct.getProductImages().isEmpty()){
+            for (Product_Image image : modiProduct.getProductImages()) {
+                imageRepository.deleteById(image.getImageId());
+            }
+        }
+        modiProduct.modifyProduct(dto);
+
+        try {
+            for (MultipartFile img : dto.getGetImages()) {
+                // 실제 파일명
+                String originName = img.getOriginalFilename();
+                // 랜덤 파일명 생성
+                String uuid = UUID.randomUUID().toString();
+                // 저장될 파일명(랜덤파일명_실제파일명)
+                String savedName = uuid + "_" + originName;
+                // 저장할 위치경로
+                Path savePath = Paths.get(productFilePath + File.separator + makeFolder() + File.separator + savedName);
+
+                // 파일 업로드
+                fileManager.fileUpload(img, savePath);
+
+                // 썸네일 생성 (나중에 썸네일 가지고 오고 싶을때
+                // lastindexof "_" 위치를 "_s_"로 replace해서 사용)
+                String thumbnailSaveName = productFilePath + File.separator + makeFolder() + File.separator + uuid + "_s_" + originName;
+                File thumbnailFile = new File(thumbnailSaveName);
+                Thumbnailator.createThumbnail(savePath.toFile(), thumbnailFile, 200, 200);
+
+                // /boardImg/**로 사용하기 쉽게  (/boardImg/년/월/일/파일명)으로 저장
+                int index = savePath.toString().lastIndexOf("/productImg");
+                String storedPath = savePath.toString().substring(index);
+
+                Product_Image product_image = Product_Image.builder()
+                        .storedName(savedName)
+                        .originName(originName)
+                        .storedPath(storedPath)
+                        .build();
+                // 영속성 전이
+                modiProduct.addImgs(product_image);
+            }
+            //DB에 저장
+            return repository.save(modiProduct).getProductId();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    // 이미지 변경 안하는 수정
+    @Override
+    public String modifyProductWithOutImg(ProductDto dto) {
+
+        Product product = repository.findById(dto.getProductId()).get();
+        product.modifyProduct(dto);
+        return repository.save(product).getProductId();
     }
 
 

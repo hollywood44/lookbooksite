@@ -5,11 +5,13 @@ import com.lbs.lookbooksite.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.List;
@@ -22,20 +24,63 @@ public class ProductController {
 
     private final ProductService productService;
 
-    @GetMapping
-    public String productTestPage() {
-        return "productTest";
-    } //todo
-
+    // 상품 리스트보기 페이지
     @GetMapping("/list")
     public String productListTestPage(Model model) {
         List<ProductDto> allProduct = productService.getAllProductList();
         model.addAttribute("allProduct",allProduct);
-        return "productListTest"; //todo
+        return "/member/product/productList_page";
     }
 
+    // 상품 상세보기 페이지
+    @GetMapping("/detail")
+    public String productDetailPage() {
+
+        return "member/product/productDetail_page";
+    }
+    @GetMapping("/upload")
+    public String postPage(ProductDto productDto) {
+        return "/member/product/productPost_page";
+    }
+
+    // 상품 업로드
     @PostMapping("/upload")
-    public String upload(ProductDto dto) {
+    public String upload(@Valid ProductDto productDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "member/product/productPost_page";
+        }
+
+        // 들어온 파일이 이미지가 아니거나, 비어있을 경우 체크
+        int checkFileIsNull = 0;
+        for (MultipartFile img : productDto.getGetImages()) {
+            File checkfile = new File(img.getOriginalFilename());
+            String type = null;
+            try {
+                type = Files.probeContentType(checkfile.toPath());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (img.isEmpty() || !type.startsWith("image")) {
+                checkFileIsNull = 0;
+            } else {
+                checkFileIsNull = 1;
+            }
+        }
+        productDto.setDescription(productDto.getDescription().replace("\n","<br>"));
+
+        if (checkFileIsNull == 0) {
+            productService.uploadProductWithOutImg(productDto);
+        } else {
+            productService.uploadProductWithImg(productDto);
+        }
+
+        return "redirect:/product/list";
+    }
+
+
+    // 상품 수정
+    @PostMapping("/modify")
+    public String modify(ProductDto dto) {
 
         // 들어온 파일이 이미지가 아니거나, 비어있을 경우 체크
         int checkFileIsNull = 0;
@@ -53,6 +98,7 @@ public class ProductController {
                 checkFileIsNull = 1;
             }
         }
+        dto.setDescription(dto.getDescription().replace("\n","<br>"));
 
         if (checkFileIsNull == 0) {
             productService.uploadProductWithOutImg(dto);
