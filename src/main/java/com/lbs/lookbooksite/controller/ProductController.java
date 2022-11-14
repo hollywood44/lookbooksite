@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,9 +34,10 @@ public class ProductController {
     }
 
     // 상품 상세보기 페이지
-    @GetMapping("/detail")
-    public String productDetailPage() {
-
+    @GetMapping("/detail/{productId}")
+    public String productDetailPage(Model model, @PathVariable("productId") String productId) {
+        ProductDto product = productService.getProduct(productId);
+        model.addAttribute("product",product);
         return "member/product/productDetail_page";
     }
     @GetMapping("/upload")

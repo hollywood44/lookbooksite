@@ -22,6 +22,7 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -136,6 +137,20 @@ public class ProductServiceImpl implements ProductService {
             return allProduct = entityList.stream().map(fn).collect(Collectors.toList());
         } else {
             return allProduct;
+        }
+    }
+
+    // 상세 상품 보기
+
+
+    @Override
+    public ProductDto getProduct(String productId) {
+        Optional<Product> entity = repository.findById(productId);
+        if (entity.isPresent()) {
+            ProductDto product = entityToDTO(entity.get());
+            return product;
+        } else {
+            return null;
         }
     }
 

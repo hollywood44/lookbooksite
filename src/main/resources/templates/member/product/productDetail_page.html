@@ -15,16 +15,20 @@
     <!-- Product section-->
     <section class="py-5">
         <div class="container px-4 px-lg-5 my-5">
-            <div class="row gx-4 gx-lg-5 align-items-center">
-                <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0" src="https://dummyimage.com/600x700/dee2e6/6c757d.jpg" alt="..." /></div>
-                <div class="col-md-6">
-                    <div class="small mb-1">상품코드</div>
-                    <h1 class="display-5 fw-bolder">상품명</h1>
-                    <div class="fs-5 mb-5">
+            <div class="row gx-4 gx-lg-5">
+                <th:block th:if="${not #strings.isEmpty(product.returnImages)}">
+                    <div class="col-md-7"><img class="card-img-top mb-5 mb-md-0" th:src="${product.returnImages[0].storedPath}" alt="..." /></div>
+                </th:block>
+                <div class="col-md-4" style="padding-top:10%">
+                    <div class="small mb-1" th:text="|상품코드 : ${product.productId}|">상품코드</div>
+                    <p class="small mb-0">상품명 : </p>
+                    <h1 class="display-5 fw-bolder" th:text="${product.productName}">상품명</h1>
+                    <div class="fs-5 mb-5" th:text="|가격 : ${product.price}|">
                         가격
                     </div>
-                    <p class="lead">상품설명</p>
-                    <div class="small mb-1">상품재고</div>
+                    <p class="small">상품설명 : </p>
+                    <p class="lead" th:text="${product.description}">상품설명</p>
+                    <div class="small mb-1" th:text="|재고 : ${product.stock}|">상품재고</div>
                     <div class="d-flex">
                         <form class="d-flex">
                             <input class="form-control me-3" name="amount" id="inputQuantity" type="number" value="1" min="1" max="99" style="max-width: 4rem" />
