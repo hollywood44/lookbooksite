@@ -7,7 +7,6 @@ import com.lbs.lookbooksite.dto.product.Product_ImageDto;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
 public interface ProductService {
 

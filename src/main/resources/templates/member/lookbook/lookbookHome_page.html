@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/baseLayout}"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta charset="UTF-8">
+    <title>룩북홈</title>
+<!--    <link href="/css/css_here.css" rel="stylesheet" />-->
+</head>
+<body>
+<th:block layout:fragment="content">
+
+<section style="flex:1;min-height:94vh" id="main-section">
+
+
+    <div class="container-fluid ps-5 mt-5">
+        <div class="row bg-white">
+<!--            sidebar-->
+            <nav id="sidebarMenu" class="col-md-2 d-md-block sidebar border rounded-3 bg-ligth">
+                <div class="position-sticky">
+                    <ul class="nav flex-column">
+                        <li class="nav-item mb-4">
+                            <a class="nav-link active text-dark" aria-current="page" href="/lookbook/home">
+                                Main
+                            </a>
+                        </li>
+                        <li class="nav-item mb-4">
+                            <a class="nav-link active text-dark" aria-current="page" href="?styleTag=minimal&page=0">
+                                #minimal
+                            </a>
+                        </li>
+                        <li class="nav-item mb-4">
+                            <a class="nav-link active text-dark" aria-current="page" href="#">
+                                #태그2
+                            </a>
+                        </li>
+                        <li class="nav-item mb-4">
+                            <a class="nav-link active text-dark" aria-current="page" href="#">
+                                #태그3
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <div class="col-md-9 d-flex justify-content-center">
+                <div class="row">
+                    <div class="card mx-2 col-4 mb-3" style="width:300px" th:if="${not #strings.isEmpty(allLookbook)}" th:each="lookbook : ${allLookbook}">
+                        <img class="card-img-top" th:src="${lookbook.returnImages[0].storedPath}" alt="Card image" style="width:100%;height:350px;">
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="|${lookbook.brand} ${lookbook.lookbookTitle}|">A브랜드 22fw lookbook</h5>
+                            <p th:text="${lookbook.styleTag}">스타일태그</p>
+                            <a th:href="@{|/lookbook/detail/${lookbook.lookbookId}|}" class="btn btn-light">상세보기</a>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+</section>
+
+</th:block>
+</body>
+</html>

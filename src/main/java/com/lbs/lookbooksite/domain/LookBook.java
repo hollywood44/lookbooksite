@@ -4,6 +4,8 @@ import com.lbs.lookbooksite.domain.timeEntities.BaseTimeEntity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "lookbook_tbl")
@@ -27,23 +29,24 @@ public class LookBook extends BaseTimeEntity {
     @Column(length = 50)
     private String brand;
 
-    // 저장된 사진명
-    private String storedName;
-
-    // 사진 경로
-    @Column(length = 100)
-    private String photoUrl;
+    // 룩북 설명
+    private String description;
 
     // 스타일 태그
     @Column(length = 100)
     private String styleTag;
 
+    @Builder.Default
+    @OneToMany(mappedBy = "lookBook", cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<LookBook_Image> lookbookImages = new ArrayList<>();
 
-    //===============================비즈니스 로직===============================//
+    //<editor-fold desc="메소드">
 
-    public void addStyleTag(String tag) {
-        this.styleTag = this.styleTag+tag;
+    public void addImgs(LookBook_Image lookBook_image) {
+        lookBook_image.setLookBook(this); //todo 되는지 확인 위아래 바꿈
+        lookbookImages.add(lookBook_image);
     }
 
+    //</editor-fold>
 
 }

@@ -1,6 +1,5 @@
 package com.lbs.lookbooksite.dto.product;
 
-import com.lbs.lookbooksite.domain.Product_Image;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,7 +8,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
-import java.util.ArrayList;
 import java.util.List;
 
 @Data

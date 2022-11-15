@@ -1,12 +1,9 @@
 package com.lbs.lookbooksite.service;
 
 import com.lbs.lookbooksite.configs.FileManager;
-import com.lbs.lookbooksite.domain.Board_Image;
 import com.lbs.lookbooksite.domain.Product;
 import com.lbs.lookbooksite.domain.Product_Image;
 import com.lbs.lookbooksite.dto.product.ProductDto;
-import com.lbs.lookbooksite.dto.product.Product_ImageDto;
-import com.lbs.lookbooksite.repository.BoardRepository;
 import com.lbs.lookbooksite.repository.ProductRepository;
 import com.lbs.lookbooksite.repository.Product_ImageRepository;
 import lombok.RequiredArgsConstructor;
@@ -129,7 +126,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductDto> getAllProductList() {
-        Function<Product,ProductDto> fn = (entity->(entityToDTO(entity)));
+        Function<Product, ProductDto> fn = (entity->(entityToDTO(entity)));
         List<ProductDto> allProduct = null;
         List<Product> entityList = repository.findAll();
 

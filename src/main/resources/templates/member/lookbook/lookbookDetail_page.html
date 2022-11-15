@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/baseLayout}"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta charset="UTF-8">
+    <title>상품목록</title>
+</head>
+<body>
+<th:block layout:fragment="content">
+
+    <!-- lookbook section-->
+    <section class="py-5" style="flex:1;min-height:94vh">
+        <div class="container px-4 px-lg-5 my-5">
+            <div class="row gx-4 gx-lg-5">
+                <th:block th:each="img, stat : ${detail.returnImages}">
+                <div class="col-md-7"><img class="card-img-top mb-5 mb-md-0" th:src="${img.storedPath}" alt="..." /></div>
+                <div class="col-md-4 text-end" th:if="${stat.count==1}">
+                    <h2 class="fw-bolder" th:text="${detail.brand}">브랜드명</h2>
+                    <h2 class="display-6 fw-bolder" th:text="${detail.lookbookTitle}">무탠다드 22f/w</h2>
+                    <h5 th:text="${detail.styleTag}">#태그</h5>
+                    <p th:utext="${detail.description}"></p>
+                </div>
+                </th:block>
+            </div>
+        </div>
+    </section>
+
+</th:block>
+</body>
+</html>

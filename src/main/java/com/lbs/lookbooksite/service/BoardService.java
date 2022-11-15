@@ -4,8 +4,6 @@ import com.lbs.lookbooksite.domain.*;
 import com.lbs.lookbooksite.dto.board.BoardDto;
 import com.lbs.lookbooksite.dto.board.Board_ImageDto;
 import com.lbs.lookbooksite.dto.board.CommentDto;
-import com.lbs.lookbooksite.dto.product.ProductDto;
-import com.lbs.lookbooksite.dto.product.Product_ImageDto;
 import org.springframework.data.domain.Page;
 
 import java.util.ArrayList;
