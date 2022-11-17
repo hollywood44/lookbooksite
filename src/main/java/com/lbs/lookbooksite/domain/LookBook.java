@@ -43,7 +43,7 @@ public class LookBook extends BaseTimeEntity {
     //<editor-fold desc="메소드">
 
     public void addImgs(LookBook_Image lookBook_image) {
-        lookBook_image.setLookBook(this); //todo 되는지 확인 위아래 바꿈
+        lookBook_image.setLookBook(this);
         lookbookImages.add(lookBook_image);
     }
 

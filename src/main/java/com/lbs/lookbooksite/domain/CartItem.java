@@ -30,6 +30,9 @@ public class CartItem {
 
     //===============================비즈니스 로직===============================//
 
+    public void setCartId(Cart cartId) {
+        this.cartId = cartId;
+    }
     public void changeItemCount(int changingCount){
         this.itemCount = changingCount;
     }

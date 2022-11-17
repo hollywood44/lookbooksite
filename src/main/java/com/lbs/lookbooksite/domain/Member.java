@@ -13,7 +13,7 @@ import java.util.*;
 @Entity
 @Table(name = "member_tbl")
 @Builder
-@ToString(exclude = {"myCart","myOrderList","myNoticeList"})
+@ToString(exclude = {"myOrderList","myNoticeList"})
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -65,9 +65,6 @@ public class Member extends BaseTimeEntity implements UserDetails {
     // todo 고른 항목이 #miniaml#street... 이런 식으로 들어가서 #으로 쪼개서 배열에 담을 수 있게 만들기
     @Column(length = 150)
     private String styleTag;
-
-    @OneToOne(mappedBy = "memberId",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.LAZY)
-    private Cart myCart;
 
     @Builder.Default
     @OneToMany(mappedBy = "orderId", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)

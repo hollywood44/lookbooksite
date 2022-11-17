@@ -1,7 +1,9 @@
 package com.lbs.lookbooksite.service;
 
+import com.lbs.lookbooksite.domain.Cart;
 import com.lbs.lookbooksite.domain.Member;
 import com.lbs.lookbooksite.dto.MemberDto;
+import com.lbs.lookbooksite.repository.CartRepository;
 import com.lbs.lookbooksite.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -15,15 +17,20 @@ import org.springframework.stereotype.Service;
 public class MemberServiceImpl implements MemberService{
 
     private final MemberRepository repository;
-
+    private final CartRepository cartRepository;
 
     // 회원가입
     @Override
     public String signup(MemberDto dto) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         dto.setPassword(encoder.encode(dto.getPassword()));
-        System.out.println("service" + dtoToEntity(dto));
-        return repository.save(dtoToEntity(dto)).getMemberId();
+        Member member = dtoToEntity(dto);
+        repository.save(member);
+
+        Cart cart = Cart.builder().memberId(member).build();
+        cartRepository.save(cart);
+
+        return member.getMemberId();
     }
 
     // 스타일 태그 변경

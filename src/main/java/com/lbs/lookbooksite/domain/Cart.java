@@ -30,7 +30,12 @@ public class Cart {
     //===============================비즈니스 로직===============================//
 
     public void addItem(CartItem item){
+        item.setCartId(this);
         this.cartItems.add(item);
+    }
+
+    public void setMember(Member member) {
+        this.memberId = member;
     }
 
 
