@@ -32,4 +32,8 @@ public class OrderItem {
     public void changeItemCount(int changingCount){
         this.itemCount = changingCount;
     }
+
+    public void setOrderId(Order order) {
+        this.orderId = order;
+    }
 }

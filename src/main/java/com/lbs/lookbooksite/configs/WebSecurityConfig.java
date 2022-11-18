@@ -28,8 +28,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception{
         http
                 .authorizeRequests() // 접근 관련 인증설정
-                .antMatchers("/**","/product/**","/product/upload","/board/**","member/**","/cart/**","/order/**").permitAll()
-                .antMatchers("/product/**","/board/**","/member/**","/cart/**").hasRole("MEMBER")
+                .antMatchers("/**","/product/**","/product/upload","/board/**","member/**","/cart/**","/order/**","/admin/**").permitAll()
+                .antMatchers("/product/**","/board/**","/member/**","/cart/**" , "/order/**").hasRole("MEMBER")
                 .antMatchers().hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()

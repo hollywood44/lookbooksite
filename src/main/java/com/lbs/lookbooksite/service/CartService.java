@@ -22,6 +22,7 @@ public interface CartService {
                     .storedPath(entityItem.getProductId().getProductImages().get(0).getStoredPath())
                     .productPrice(entityItem.getProductId().getPrice())
                     .itemCount(entityItem.getItemCount())
+                    .cartItemId(entityItem.getCartItemId())
                     .build();
             dtoItemList.add(dtoItem);
         }

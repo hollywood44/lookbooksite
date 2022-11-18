@@ -21,13 +21,10 @@ public class Order extends OrderTimeEntity {
 
     @ManyToOne(targetEntity = Member.class,fetch = FetchType.LAZY)
     @JoinColumn(name = "memberId")
-    private Member orderedMember;
+    private Member memberId;
 
-    @Column(length = 20)
-    private String orderState;
-
-    @Column(length = 20)
-    private String addressNumber;
+    @Enumerated(EnumType.STRING)
+    private OrderStatus orderStatus;
 
     @Column(length = 100)
     private String address;
@@ -44,10 +41,15 @@ public class Order extends OrderTimeEntity {
     @OneToMany(mappedBy = "orderId", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)
     private List<OrderItem> orderItems = new ArrayList<>();
 
+    public enum OrderStatus {
+        Ready,Cancle,Shipping,Complete
+    }
+
 
     //===============================비즈니스 로직===============================//
 
     public void addItem(OrderItem item){
+        item.setOrderId(this);
         this.orderItems.add(item);
     }
 

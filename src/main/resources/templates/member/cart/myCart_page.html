@@ -35,21 +35,24 @@
             <div class="cart-item col-sm-10 border text-start mt-3 mb-5 bg-white" th:each="item : ${cart.cartItems}" style="border-radius:3.5rem;">
                 <div class="row align-items-center">
                     <input type="hidden" th:value="${item.cartItemId}" name="cartItemId">
+                    <input type="hidden" th:value="${item.productId}" name="productId">
                     <div class="col-sm-1 d-flex justify-content-center"><input type="checkbox" class="form-check-input" name="check"></div>
                     <div class="col-sm-5 d-flex align-items-center my-5">
                         <div style="height:150px;width:150px;" class="my-2">
                             <img th:src="${item.storedPath}" alt="#" name="img" style="height:100%;width:100%;">
+                            <input type="hidden" name="itemImagePath" th:value="${item.storedPath}" />
                         </div>
                         <div class="mx-2" th:text="${item.productName}">
                             product name
                         </div>
+                        <input type="hidden" th:value="${item.productName}" name="itemName" />
                     </div>
                     <div class="col-sm-2">
                         <div class="text-center">
                             상품 가격(원)
                         </div>
                         <div class="text-center fw-bold">
-                            <input type="text" name="price" th:value="${item.productPrice}" class="w-75 text-center bg-white border-0 fw-bold" disabled/>
+                            <input type="text" name="itemPrice" th:value="${item.productPrice}" class="w-75 text-center bg-white border-0 fw-bold" disabled/>
                         </div>
                     </div>
                     <div class="col-sm-1"><input type="number" th:value="${item.itemCount}" style="width:110%" min="1" name="itemCount"></div>
@@ -88,10 +91,12 @@
             </div>
         </div>
     </div>
+    <form id="proceedingForm" th:action="@{/order/proceeding-cart}" method="post">
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+    </form>
 </section>
     <script>
         $(function(){
-            console.log("dom완료");
 
             $('input:checkbox').change(function(){
                 var totalPrice = 0;
@@ -99,7 +104,7 @@
 
                 for(var i =0; i<lens ; i++){
                     if($('[name=check]').eq(i).is(':checked')){
-                        var price = $('[name=price]').eq(i).val();
+                        var price = $('[name=itemPrice]').eq(i).val();
                         var count = $('[name=itemCount]').eq(i).val();
 
                         totalPrice += price*count;
@@ -120,7 +125,7 @@
 
                 for(var i =0; i<lens ; i++){
                     if($('[name=check]').eq(i).is(':checked')){
-                        var price = $('[name=price]').eq(i).val();
+                        var price = $('[name=itemPrice]').eq(i).val();
                         var count = $('[name=itemCount]').eq(i).val();
 
                         totalPrice += price*count;
@@ -141,7 +146,7 @@
 
                 for(var i =0; i<lens ; i++){
                     if($('[name=check]').eq(i).is(':checked')){
-                        var price = $('[name=price]').eq(i).val();
+                        var price = $('[name=itemPrice]').eq(i).val();
                         var count = $('[name=itemCount]').eq(i).val();
 
                         totalPrice += price*count;
@@ -163,37 +168,46 @@
            var checked = $('input:checkbox').is(':checked');
            $('input:checkbox').prop('checked',checked);
            $('input:checkbox').trigger("click");
-        })
+        });
+
 
 <!--        주문-->
         $('#order-btn').click(function(){
-            var cId = $('[name=cartId]').val();
-            var lens = $('[name=check]').length;
-            var nform = $('<form></form>');
-            nform.attr("method","POST");
-            nform.attr("action","/order/order-by-cart")
+            let cId = $('[name=cartId]').val();
+            let lens = $('[name=check]').length;
+            let nform = $('#proceedingForm');
 
-            for(var i=0;i<lens;i++){
+            for(let i=0;i<lens;i++){
                 if($('[name=check]').eq(i).is(':checked')){
-                    var itemId = $('[name=itemId]').eq(i).val();
-                    var itemCount = $('[name=itemCount]').eq(i).val();
-                    var itemPrice = $('[name=price]').eq(i).val();
 
+                    let cartItemIdV = $('[name=cartItemId]').eq(i).val();
+                    let itemImagePathV = $('[name=itemImagePath]').eq(i).val();
+                    let itemNameV = $('[name=itemName]').eq(i).val();
+                    let itemPriceV = $('[name=itemPrice]').eq(i).val();
+                    let itemCountV = $('[name=itemCount]').eq(i).val();
+                    let productIdV = $('[name=productId]').eq(i).val();
 
+                    nform.append($('<input />',{type:'hidden', name:'cartItemId', value:cartItemIdV}));
+                    nform.append($('<input />',{type:'hidden', name:'itemImagePath', value:itemImagePathV}));
+                    nform.append($('<input />',{type:'hidden', name:'itemName', value:itemNameV}));
+                    nform.append($('<input />',{type:'hidden', name:'itemPrice', value:itemPriceV}));
+                    nform.append($('<input />',{type:'hidden', name:'itemCount', value:itemCountV}));
+                    nform.append($('<input />',{type:'hidden', name:'productId', value:productIdV}));
 
-                    var item = $("<input type='hidden' value=>"+itemId+" name='itemId' readonly>");
-                    var count = $("<input type='hidden' value=>"+itemCount+" name='itemCount' readonly>");
-                    var price = $("<input type='hidden' value=>"+itemPrice+" name='itemPrice' readonly>");
-
-                    nform.append(item);
-                    nform.append(count);
-                    nform.append(price);
+                    console.log(i);
+                    console.log(cartItemIdV);
+                    console.log(itemImagePathV);
+                    console.log(itemNameV);
+                    console.log(itemPriceV);
+                    console.log(itemCountV);
+                    console.log("-------");
                 }
             }
-            var cartId = $("<input type='hidden' value=>"+cId+" name='cartId' readonly>");
-            nform.append(cartId);
+                var totalPriceV = $('#total-price').text();
+                totalPriceV = parseInt(totalPriceV);
 
-            nform.appendTo('body');
+                nform.append($('<input />',{type:'hidden', name:'totalPrice', value:totalPriceV}));
+
             nform.submit();
         });
 
