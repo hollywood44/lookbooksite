@@ -14,20 +14,20 @@
 
     <div class="container mt-4 bg-white border-1 p-3 mb-4" style="width:60%;border-radius:2.5rem;">
         <h2 class="display-6 fw-bolder">주문</h2>
-        <form action="#" method="post">
+        <form th:action="@{/order/putOrder}" method="post">
             <div class="mb-3 mt-3">
                 <p>받는분 성함</p>
-                <input type="text" class="form-control" placeholder="받는분 성함">
+                <input type="text" class="form-control" placeholder="받는분 성함" name="receiverName">
             </div>
 
             <div class="mb-3">
                 <p>주소</p>
-                <input type="text" class="form-control" placeholder="주소">
+                <input type="text" class="form-control" placeholder="주소" name="address">
             </div>
 
             <div class="mb-3">
                 <p>상세주소</p>
-                <input type="text" class="form-control" placeholder="상세 주소">
+                <input type="text" class="form-control" placeholder="상세 주소" name="addressDetail">
             </div>
 
             <div class="row mb-3 mt-5">
@@ -53,7 +53,14 @@
             <div class="mt-5 mb-5 d-flex justify-content-end">
                 <h2 class="display-6 fw-bold">총 금액 : </h2>
                 <h2 class="display-6 fw-bold" th:text="|${proceed.totalPrice}원|">10000원</h2>
+                <input type="hidden" name="totalPrice" th:value="${proceed.totalPrice}" />
             </div>
+
+            <th:blcok th:if="${not #strings.isEmpty(proceed.cartItemId)}" th:each="item, i : ${proceed.cartItemId}">
+                <input type="hidden" th:name="|orderItemDtos[${i.index}].cartItemId|" th:value="${proceed.cartItemId[i.index]}">
+                <input type="hidden" th:name="|orderItemDtos[${i.index}].productId|" th:value="${proceed.productId[i.index]}">
+                <input type="hidden" th:name="|orderItemDtos[${i.index}].itemCount|" th:value="${proceed.itemCount[i.index]}">
+            </th:blcok>
 
             <div class="mb-5 d-flex justify-content-end">
                 <button type="submit" class="btn btn-primary me-5">주문</button>

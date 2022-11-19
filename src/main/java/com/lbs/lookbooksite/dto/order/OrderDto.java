@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 @Data
@@ -16,9 +17,13 @@ public class OrderDto {
     private String orderId;
     private String memberId;
     private String orderStatus;
+
+
     private String address;
     private String addressDetail;
     private String receiverName;
+
     private int totalPrice;
+
     private List<OrderItemDto> orderItemDtos;
 }

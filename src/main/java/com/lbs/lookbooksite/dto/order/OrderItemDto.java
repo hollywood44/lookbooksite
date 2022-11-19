@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -13,7 +15,9 @@ public class OrderItemDto {
 
     private Long orderItemId;
     private String orderId;
+
+    // 주문 시 받을 값 -> 3개
+    private Long cartItemId;
     private String productId;
     private int itemCount;
-
 }

@@ -20,5 +20,5 @@ public class OrderTimeEntity {
 
     // 수정일
     @LastModifiedDate
-    private LocalDateTime cancleDate;
+    private LocalDateTime modifiedDate;
 }
