@@ -1,0 +1,20 @@
+#admin-Nav-main{
+    position:sticky;
+    top:0;
+    z-index:100;
+}
+
+.admin-menu-item{
+    height:40px !important;
+    width:100%;
+    margin-top:15px;
+}
+
+.admin-menu-item:hover{
+    background-color:#6c757d47;
+}
+
+#admin-main-total{
+    border-radius:1rem;
+    padding: 10px;
+}
