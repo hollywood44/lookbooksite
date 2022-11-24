@@ -1,6 +1,7 @@
 package com.lbs.lookbooksite.domain;
 
 import com.lbs.lookbooksite.domain.timeEntities.BaseTimeEntity;
+import com.lbs.lookbooksite.dto.board.BoardDto;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
@@ -73,5 +74,11 @@ public class Board  extends BaseTimeEntity {
     }
     public int getCommentCount() {
         return this.commentList.size();
+    }
+
+    public void modify(BoardDto dto) {
+        this.title = dto.getTitle();
+        this.content = dto.getContent();
+        this.viewCount = dto.getViewCount();
     }
 }

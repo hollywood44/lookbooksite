@@ -21,6 +21,16 @@ public interface BoardService {
         return entity;
     }
 
+    default Board dtoToEntityAsModify(BoardDto dto) {
+        Board entity = Board.builder()
+                .boardId(dto.getBoardId())
+                .title(dto.getTitle())
+                .content(dto.getContent())
+                .writer(Member.builder().memberId(dto.getWriter()).build())
+                .build();
+        return entity;
+    }
+
     // 상세보기에서 쓸거
     default BoardDto entityToDto(Board entity) {
         List<Board_ImageDto> dtoImages = new ArrayList<>();
@@ -61,7 +71,34 @@ public interface BoardService {
                 .likeCount(entity.getLikeCount())
                 .commentList(commentDtoList)
                 .regDate(entity.getRegDate())
-                .regDate(entity.getModDate())
+                .modDate(entity.getModDate())
+                .build();
+        return dto;
+    }
+
+    // 수정에서 쓸 toDto
+    default BoardDto entityToDtoAsModify(Board entity) {
+        List<Board_ImageDto> dtoImages = new ArrayList<>();
+
+        if (!entity.getBoardImgs().isEmpty()) {
+            for (Board_Image entityImg : entity.getBoardImgs()) {
+                Board_ImageDto dtoImg = Board_ImageDto.builder()
+                        .imageId(entityImg.getImageId())
+                        .storedPath(entityImg.getStoredPath())
+                        .build();
+                dtoImages.add(dtoImg);
+            }
+        } else {
+            dtoImages = null;
+        }
+
+        BoardDto dto = BoardDto.builder()
+                .boardId(entity.getBoardId())
+                .title(entity.getTitle())
+                .content(entity.getContent())
+                .viewCount(entity.getViewCount())
+                .writer(entity.getWriter().getMemberId())
+                .returnImages(dtoImages)
                 .build();
         return dto;
     }
@@ -81,17 +118,22 @@ public interface BoardService {
 
     //</editor-fold>
 
+    // 게시글 업로드 관련
     Long uploadBoardWithImg(BoardDto dto);
-
     Long uploadBoardWithOutImg(BoardDto dto);
 
-    List<BoardDto> getAllBoardList();
+    // 게시글 수정
+    Long modifyBoard(BoardDto dto,int checkImgStatus);
 
+    void deleteImage(Long imageId);
+
+    // 게시글 불러오기 관련
+    Page<BoardDto> getAllBoardList(int page);
     BoardDto getBoard(Long boardId);
+    BoardDto getBoardAsModify(Long boardId);
 
+    // 게시글 좋아요, 댓글달기
     void likeBoard(Member member, Long boardId);
-
     void postComment(CommentDto commentDto,Member commenter,Long boardId);
 
-    Page<BoardDto> getAllBoardList(int page);
 }

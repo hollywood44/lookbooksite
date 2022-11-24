@@ -5,6 +5,7 @@ import com.lbs.lookbooksite.domain.*;
 import com.lbs.lookbooksite.dto.board.BoardDto;
 import com.lbs.lookbooksite.dto.board.CommentDto;
 import com.lbs.lookbooksite.repository.BoardRepository;
+import com.lbs.lookbooksite.repository.Board_ImageRepository;
 import com.lbs.lookbooksite.repository.CommentRepository;
 import com.lbs.lookbooksite.repository.LikeRepository;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,7 @@ public class BoardServiceImpl implements BoardService{
     private String boardFilePath;
 
     private final BoardRepository boardRepository;
+    private final Board_ImageRepository imageRepository;
     private final LikeRepository likeRepository;
     private final CommentRepository commentRepository;
 
@@ -63,7 +65,7 @@ public class BoardServiceImpl implements BoardService{
 
     @Override @Transactional
     public Long uploadBoardWithImg(BoardDto dto) {
-        System.out.println("이미지 포함");
+
         // 이미지파일들 빼고 엔티티에 들어가 있는 상태
         Board uploadBoard = dtoToEntity(dto);
 
@@ -118,22 +120,73 @@ public class BoardServiceImpl implements BoardService{
         return boardRepository.save(board).getBoardId();
     }
 
+    @Override
+    @Transactional
+    public Long modifyBoard(BoardDto dto,int checkImgStatus) {
+
+        // 이미지파일들 빼고 엔티티에 들어가 있는 상태
+        Board uploadBoard = boardRepository.findById(dto.getBoardId()).get();
+        // 게시글 제목,내용 수정
+        uploadBoard.modify(dto);
+        if(checkImgStatus==1){
+            try {
+                //원래 있던 이미지 삭제
+                imageRepository.delete(uploadBoard.getBoardImgs().get(0));
+                uploadBoard.getBoardImgs().clear();
+
+                for (MultipartFile img : dto.getGetImages()) {
+                    // 실제 파일명
+                    String originName = img.getOriginalFilename();
+                    // 랜덤 파일명 생성
+                    String uuid = UUID.randomUUID().toString();
+                    // 저장될 파일명(랜덤파일명_실제파일명)
+                    String savedName = uuid + "_" + originName;
+                    // 저장할 위치경로
+                    Path savePath = Paths.get(boardFilePath + File.separator + makeFolder() + File.separator + savedName);
+
+                    // 파일 업로드
+                    fileManager.fileUpload(img, savePath);
+
+                    // 썸네일 생성 (나중에 썸네일 가지고 오고 싶을때
+                    // lastindexof "_" 위치를 "_s_"로 replace해서 사용)
+                    String thumbnailSaveName = boardFilePath + File.separator + makeFolder() + File.separator + uuid + "_s_" + originName;
+                    File thumbnailFile = new File(thumbnailSaveName);
+                    Thumbnailator.createThumbnail(savePath.toFile(), thumbnailFile, 200, 200);
+
+                    // /boardImg/**로 사용하기 쉽게  (/boardImg/년/월/일/파일명)으로 저장
+                    int index = savePath.toString().lastIndexOf("/boardImg");
+                    String storedPath = savePath.toString().substring(index);
+
+                    Board_Image board_image = Board_Image.builder()
+                            .storedName(savedName)
+                            .originName(originName)
+                            .storedPath(storedPath)
+                            .build();
+                    // 영속성 전이
+                    uploadBoard.addImgs(board_image);
+                }
+
+                //DB에 저장
+                return boardRepository.save(uploadBoard).getBoardId();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }else {
+            return boardRepository.save(uploadBoard).getBoardId();
+        }
+        return null;
+    }
+
+    @Override
+    public void deleteImage(Long imageId) {
+        Board_Image deleteImg = imageRepository.findById(imageId).get();
+        imageRepository.delete(deleteImg);
+    }
+
     //</editor-fold>
 
     //<editor-fold desc="가져오기 관련">
-
-    @Override
-    public List<BoardDto> getAllBoardList() {
-        Function<Board, BoardDto> fn = (entity -> (entityToDtoNoneDetail(entity)));
-        List<BoardDto> allBoard = null;
-        List<Board> entityList = boardRepository.findAll();
-
-        if (!entityList.isEmpty()) {
-            return allBoard = entityList.stream().map(fn).collect(Collectors.toList());
-        } else {
-            return allBoard;
-        }
-    }
 
     @Override
     public Page<BoardDto> getAllBoardList(int page) {
@@ -157,6 +210,13 @@ public class BoardServiceImpl implements BoardService{
         } else {
             return null;
         }
+    }
+
+    @Override
+    public BoardDto getBoardAsModify(Long boardId) {
+        Board entity = boardRepository.findById(boardId).get();
+        BoardDto dto = entityToDtoAsModify(entity);
+        return dto;
     }
 
     //</editor-fold>

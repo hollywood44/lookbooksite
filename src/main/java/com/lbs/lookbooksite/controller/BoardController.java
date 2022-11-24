@@ -58,6 +58,23 @@ public class BoardController {
         return "/member/board/boardDetail_page";
     }
 
+    // 게시글 수정 페이지
+    @GetMapping("/modify/{boardId}")
+    public String boardModifyPage(Model model,@PathVariable("boardId") Long boardId) {
+        BoardDto board = boardService.getBoardAsModify(boardId);
+        board.setContent(board.getContent().replace("<br>","\n"));
+        model.addAttribute("boardDto", board);
+
+        return "member/board/boardModify_page";
+    }
+
+    // 게시글 이미지 삭제
+    @GetMapping("/delete-Img")
+    public String deleteImage(@RequestParam("imageId")Long imageId,@RequestParam("boardId") Long boardId) {
+        boardService.deleteImage(imageId);
+        return "redirect:/board/modify/"+boardId;
+    }
+
     // 게시글 좋아요
     @GetMapping("/like/{boardId}")
     public String boardLike(@PathVariable("boardId") Long boardId,@AuthenticationPrincipal Member loginedMember) {
@@ -109,6 +126,37 @@ public class BoardController {
 
         return "redirect:/board/list";
     }
+
+    @PostMapping("/modify")
+    public String modifyBoard(@Valid BoardDto boardDto, BindingResult bindingResult,@AuthenticationPrincipal Member loginedMember) {
+        if (bindingResult.hasErrors()) {
+            return "member/board/modify/"+boardDto.getBoardId();
+        }
+
+        // 들어온 파일이 이미지가 아니거나, 비어있을 경우  =0 , 있을경우 =1
+        int checkFileIsNull = 0;
+        for (MultipartFile img : boardDto.getGetImages()) {
+            File checkfile = new File(img.getOriginalFilename());
+            String type = null;
+            try {
+                type = Files.probeContentType(checkfile.toPath());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (img.isEmpty() || !type.startsWith("image")) {
+                checkFileIsNull = 0;
+            } else {
+                checkFileIsNull = 1;
+            }
+        }
+
+        boardDto.setContent(boardDto.getContent().replace("\n","<br>"));
+
+        boardService.modifyBoard(boardDto,checkFileIsNull);
+
+        return "redirect:/board/detail/"+boardDto.getBoardId();
+    }
+
 
     // 댓글 등록
     @PostMapping("/comment/{boardId}")
