@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/signInLayout}"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta charset="UTF-8">
+    <title>스타일태그 관리 페이지</title>
+</head>
+<body>
+<th:block layout:fragment="content">
+
+    <div class="container">
+        <div class="d-flex flex-column align-items-center">
+            <div class="jumbotron" style="padding-top: 100px;width:400px">
+                <form method="post" th:action="@{/member/styleTag}">
+                    <sec:csrfInput />
+                    <h3 style="text-align: center;">내 스타일 태그 관리</h3>
+                    <div th:replace="fragment/form_errors :: formErrorsFragment"></div>
+                    <div>
+                        관심이 있는 스타일에 체크, 관심 없는 스타일에 체크해제를 해주시고 <br>
+                        제출 버튼을 눌러주세요!
+                    </div>
+                    <p>관심 있는 스타일 태그</p>
+
+                    <div class="form-check form-check-inline mb-2">
+                        <input type="checkbox" class="form-check-input" checked>#tag1
+                    </div>
+                    <div class="form-check form-check-inline mb-2">
+                        <input type="checkbox" class="form-check-input" checked>#tag2
+                    </div>
+                    <div class="form-check form-check-inline mb-2">
+                        <input type="checkbox" class="form-check-input" checked>#tag3
+                    </div>
+
+                    <p>관심 없는 스타일 태그</p>
+
+                    <div class="form-check form-check-inline mb-2">
+                        <input type="checkbox" class="form-check-input" checked>#tag4
+                    </div>
+                    <div class="form-check form-check-inline mb-2">
+                        <input type="checkbox" class="form-check-input" checked>#tag5
+                    </div>
+                    <div class="form-check form-check-inline mb-2">
+                        <input type="checkbox" class="form-check-input" checked>#tag6
+                    </div>
+
+
+                    <input type="submit" class="btn btn-primary form-control" style="margin-top:5px;" value="제출">
+                </form>
+            </div>
+        </div>
+
+
+</th:block>
+</body>
+</html>

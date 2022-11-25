@@ -6,7 +6,7 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
     <meta charset="UTF-8">
-    <title>룩북 게시</title>
+    <title>룩북 수정 페이지</title>
     <link href="/css/product.css" rel="stylesheet" />
 </head>
 <body>
@@ -15,10 +15,10 @@
     <!-- Product section-->
     <section class="py-5">
         <div class="container px-4 px-lg-5 my-5">
-            <form th:action="@{/lookbook/post}" method="post" enctype="multipart/form-data" th:object="${lookbookDto}">
+            <form th:action="@{/lookbook/modify}" method="post" enctype="multipart/form-data" th:object="${lookbookDto}">
                 <sec:csrfInput />
                 <div class="row gx-4 gx-lg-5">
-                <div class="col-md-7"><img class="card-img-top mb-5 mb-md-0" src="/assets/ImageHere.png" alt="..." /></div>
+                <div class="col-md-7"><img class="card-img-top mb-5 mb-md-0" th:src="${lookbookDto.returnImages[0].storedPath}" alt="..." /></div>
                 <div class="col-md-4">
                     <div th:replace="fragment/form_errors :: formErrorsFragment"></div>
                     <div class="small mb-1"><input type="text" class="form-control" placeholder="룩북 제목" th:field="*{lookbookTitle}"></div>

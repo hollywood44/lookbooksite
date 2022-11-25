@@ -6,7 +6,7 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
     <meta charset="UTF-8">
-    <title>상품 등록</title>
+    <title>상품 수정</title>
     <link href="/css/product.css" rel="stylesheet" />
 </head>
 <body>
@@ -15,13 +15,13 @@
     <!-- Product section-->
     <section class="py-5">
         <div class="container px-4 px-lg-5 my-5">
-            <form th:action="@{/product/upload}" method="post" enctype="multipart/form-data" th:object="${productDto}">
+            <form th:action="@{/product/modify}" method="post" enctype="multipart/form-data" th:object="${productDto}">
                 <sec:csrfInput />
                 <div class="row gx-4 gx-lg-5 align-items-center">
-                <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0" src="https://dummyimage.com/600x700/dee2e6/6c757d.jpg" alt="..." /></div>
+                <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0" th:src="${productDto.returnImages[0].storedPath}" alt="..." /></div>
                 <div class="col-md-6">
                     <div th:replace="fragment/form_errors :: formErrorsFragment"></div>
-                    <div class="small mb-1"><input type="text" class="form-control" placeholder="상품코드" th:field="*{productId}"></div>
+                    <div class="small mb-1"><input type="text" class="form-control" placeholder="상품코드" th:field="*{productId}" readonly></div>
                     <div class="display-5 fw-bolder"><input class="form-control" type="text" placeholder="상품명" th:field="*{productName}"></div>
                     <div class="fs-5 mb-1">
                         <input type="text" class="form-control" placeholder="상품가격" th:field="*{price}">

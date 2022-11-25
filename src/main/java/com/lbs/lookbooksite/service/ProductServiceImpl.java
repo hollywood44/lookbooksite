@@ -124,6 +124,7 @@ public class ProductServiceImpl implements ProductService {
 
     //<editor-fold desc="가져오기 관련">
 
+    // 상세 상품 보기
     @Override
     public List<ProductDto> getAllProductList() {
         Function<Product, ProductDto> fn = (entity->(entityToDTO(entity)));
@@ -137,9 +138,8 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
-    // 상세 상품 보기
 
-
+    // 상품 정보 가져오기
     @Override
     public ProductDto getProduct(String productId) {
         Optional<Product> entity = repository.findById(productId);
@@ -151,66 +151,59 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
-    // 상품 수정 이미지 포함
+    // 상품 수정
     @Override
-    public String modifyProduct(ProductDto dto) {
+    @Transactional
+    public String modifyProduct(ProductDto dto,int checkStatus) {
         Product modiProduct = repository.findById(dto.getProductId()).get();
 
-        if(!modiProduct.getProductImages().isEmpty()){
-            for (Product_Image image : modiProduct.getProductImages()) {
-                imageRepository.deleteById(image.getImageId());
-            }
-        }
+        // 이미지빼고 바꾼상태
         modiProduct.modifyProduct(dto);
 
-        try {
-            for (MultipartFile img : dto.getGetImages()) {
-                // 실제 파일명
-                String originName = img.getOriginalFilename();
-                // 랜덤 파일명 생성
-                String uuid = UUID.randomUUID().toString();
-                // 저장될 파일명(랜덤파일명_실제파일명)
-                String savedName = uuid + "_" + originName;
-                // 저장할 위치경로
-                Path savePath = Paths.get(productFilePath + File.separator + makeFolder() + File.separator + savedName);
+        if (checkStatus == 1) {
+            modiProduct.deleteImgs();
+            try {
+                for (MultipartFile img : dto.getGetImages()) {
+                    // 실제 파일명
+                    String originName = img.getOriginalFilename();
+                    // 랜덤 파일명 생성
+                    String uuid = UUID.randomUUID().toString();
+                    // 저장될 파일명(랜덤파일명_실제파일명)
+                    String savedName = uuid + "_" + originName;
+                    // 저장할 위치경로
+                    Path savePath = Paths.get(productFilePath + File.separator + makeFolder() + File.separator + savedName);
 
-                // 파일 업로드
-                fileManager.fileUpload(img, savePath);
+                    // 파일 업로드
+                    fileManager.fileUpload(img, savePath);
 
-                // 썸네일 생성 (나중에 썸네일 가지고 오고 싶을때
-                // lastindexof "_" 위치를 "_s_"로 replace해서 사용)
-                String thumbnailSaveName = productFilePath + File.separator + makeFolder() + File.separator + uuid + "_s_" + originName;
-                File thumbnailFile = new File(thumbnailSaveName);
-                Thumbnailator.createThumbnail(savePath.toFile(), thumbnailFile, 200, 200);
+                    // 썸네일 생성 (나중에 썸네일 가지고 오고 싶을때
+                    // lastindexof "_" 위치를 "_s_"로 replace해서 사용)
+                    String thumbnailSaveName = productFilePath + File.separator + makeFolder() + File.separator + uuid + "_s_" + originName;
+                    File thumbnailFile = new File(thumbnailSaveName);
+                    Thumbnailator.createThumbnail(savePath.toFile(), thumbnailFile, 200, 200);
 
-                // /boardImg/**로 사용하기 쉽게  (/boardImg/년/월/일/파일명)으로 저장
-                int index = savePath.toString().lastIndexOf("/productImg");
-                String storedPath = savePath.toString().substring(index);
+                    // /boardImg/**로 사용하기 쉽게  (/boardImg/년/월/일/파일명)으로 저장
+                    int index = savePath.toString().lastIndexOf("/productImg");
+                    String storedPath = savePath.toString().substring(index);
 
-                Product_Image product_image = Product_Image.builder()
-                        .storedName(savedName)
-                        .originName(originName)
-                        .storedPath(storedPath)
-                        .build();
-                // 영속성 전이
-                modiProduct.addImgs(product_image);
+                    Product_Image product_image = Product_Image.builder()
+                            .storedName(savedName)
+                            .originName(originName)
+                            .storedPath(storedPath)
+                            .build();
+                    // 영속성 전이
+                    modiProduct.addImgs(product_image);
+                }
+                //DB에 저장
+                return repository.save(modiProduct).getProductId();
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            //DB에 저장
+        } else {
             return repository.save(modiProduct).getProductId();
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
         return null;
-    }
-
-    // 이미지 변경 안하는 수정
-    @Override
-    public String modifyProductWithOutImg(ProductDto dto) {
-
-        Product product = repository.findById(dto.getProductId()).get();
-        product.modifyProduct(dto);
-        return repository.save(product).getProductId();
     }
 
 

@@ -40,6 +40,7 @@ public class Product extends BaseTimeEntity {
     private List<Product_Image> productImages = new ArrayList<>();
 
     //<editor-fold desc="메소드">
+
     // 상품업로드만으로 사진도 같이 업로드 하려고 사용
     // 상품이미지를 추가하고, 상품이미지 엔티티에 product에 해당 상품 세팅
     public void addImgs(Product_Image product_image) {
@@ -59,6 +60,11 @@ public class Product extends BaseTimeEntity {
         this.description = modify.getDescription();
         this.price = modify.getPrice();
         this.stock = modify.getStock();
+    }
+
+    // 상품 이미지 삭제
+    public void deleteImgs() {
+        productImages.clear();
     }
 
     //</editor-fold>

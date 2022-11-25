@@ -127,6 +127,7 @@ public class BoardController {
         return "redirect:/board/list";
     }
 
+    // 게시글 수정
     @PostMapping("/modify")
     public String modifyBoard(@Valid BoardDto boardDto, BindingResult bindingResult,@AuthenticationPrincipal Member loginedMember) {
         if (bindingResult.hasErrors()) {

@@ -56,6 +56,5 @@ public interface ProductService {
 
     ProductDto getProduct(String productId);
 
-    String modifyProduct(ProductDto dto);
-    String modifyProductWithOutImg(ProductDto dto);
+    String modifyProduct(ProductDto dto,int checkStatus);
 }

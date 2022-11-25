@@ -47,6 +47,10 @@ public class LookBook extends BaseTimeEntity {
         lookbookImages.add(lookBook_image);
     }
 
+    public void deleteImgs(Long lookbookImgId) {
+        lookbookImages.removeIf(img -> (img.getImageId() == (lookbookImgId)));
+    }
+
     //</editor-fold>
 
 }

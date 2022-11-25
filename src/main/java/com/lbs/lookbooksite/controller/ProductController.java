@@ -3,6 +3,7 @@ package com.lbs.lookbooksite.controller;
 import com.lbs.lookbooksite.dto.product.ProductDto;
 import com.lbs.lookbooksite.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.Banner;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -40,9 +41,20 @@ public class ProductController {
         model.addAttribute("product",product);
         return "member/product/productDetail_page";
     }
+    // 업로드 페이지
     @GetMapping("/upload")
     public String postPage(ProductDto productDto) {
         return "/member/product/productPost_page";
+    }
+
+    // 수정 페이지
+    @GetMapping("/modify/{productId}")
+    public String productModifyPage(Model model,@PathVariable("productId") String productId) {
+        ProductDto productDto = productService.getProduct(productId);
+        productDto.setDescription(productDto.getDescription().replace("<br>","\n"));
+        model.addAttribute("productDto",productDto);
+
+        return "member/product/productModify_page";
     }
 
     // 상품 업로드
@@ -82,8 +94,11 @@ public class ProductController {
 
     // 상품 수정
     @PostMapping("/modify")
-    public String modify(ProductDto dto) {
+    public String modify(@Valid ProductDto dto,BindingResult bindingResult) {
 
+        if (bindingResult.hasErrors()) {
+            return "/product/modify/"+dto.getProductId();
+        }
         // 들어온 파일이 이미지가 아니거나, 비어있을 경우 체크
         int checkFileIsNull = 0;
         for (MultipartFile img : dto.getGetImages()) {
@@ -100,14 +115,11 @@ public class ProductController {
                 checkFileIsNull = 1;
             }
         }
+
         dto.setDescription(dto.getDescription().replace("\n","<br>"));
 
-        if (checkFileIsNull == 0) {
-            productService.uploadProductWithOutImg(dto);
-        } else {
-            productService.uploadProductWithImg(dto);
-        }
+        productService.modifyProduct(dto,checkFileIsNull);
 
-        return "redirect:/product/list";
+        return "redirect:/product/detail/"+dto.getProductId();
     }
 }

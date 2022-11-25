@@ -6,7 +6,7 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
     <meta charset="UTF-8">
-    <title>상품목록</title>
+    <title>상품 상세보기 페이지</title>
     <link href="/css/product.css" rel="stylesheet" />
 </head>
 <body>
@@ -27,7 +27,7 @@
                         가격
                     </div>
                     <p class="small">상품설명 : </p>
-                    <p class="lead" th:text="${product.description}">상품설명</p>
+                    <p class="lead" th:utext="${product.description}">상품설명</p>
                     <div class="small mb-1" th:text="|재고 : ${product.stock}|">상품재고</div>
                     <div class="d-flex">
                         <form class="d-flex" method="post" th:action="@{/cart/add-item}">
@@ -38,6 +38,7 @@
                                 <i class="bi-cart-fill me-1"></i>
                                 Add to cart
                             </button>
+                            <a class="btn btn-secondary" th:href="@{|/product/modify/${product.productId}|}">수정페이지</a>
                         </form>
                     </div>
                 </div>

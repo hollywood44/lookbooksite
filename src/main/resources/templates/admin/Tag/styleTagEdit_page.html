@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/adminLayout}"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+  <meta charset="UTF-8">
+  <title>스타일태그 관리 페이지</title>
+</head>
+<body>
+
+  <section layout:fragment="content">
+    <div id="admin-main-total" class="border">
+      <h2>현재 스타일 태그</h2>
+
+      <div>
+        <ul>
+          <li>#Tag1</li><a href="#">이 태그 삭제</a>
+          <li>#Tag2</li><a href="#">이 태그 삭제</a>
+          <li>#Tag3</li><a href="#">이 태그 삭제</a>
+        </ul>
+      </div>
+
+      <form>
+        <input type="text" placeholder="add style-tag"/>
+        <input type="submit" value="스타일태그 추가"/>
+      </form>
+
+
+    </div>
+  </section>
+
+</body>
+</html>
