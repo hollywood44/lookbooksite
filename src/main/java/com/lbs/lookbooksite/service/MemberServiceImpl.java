@@ -10,6 +10,9 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @Log4j2
@@ -33,6 +36,17 @@ public class MemberServiceImpl implements MemberService{
         return member.getMemberId();
     }
 
+    @Override
+    public MemberDto getMyInfo(Member loginedMember) {
+        System.out.println(loginedMember);
+
+        Member member = repository.findById(loginedMember.getMemberId()).orElseThrow(()-> new UsernameNotFoundException("아이디를 찾을 수 없습니다."));
+
+        MemberDto myInfo = entityToDto(member);
+
+        return myInfo;
+    }
+
     // 스타일 태그 변경
     @Override
     public void changeStyleTag(MemberDto dto) {
@@ -47,27 +61,24 @@ public class MemberServiceImpl implements MemberService{
 
     // 회원 정보 변경
     @Override
-    public void changeMemberInfo(MemberDto changeInfo) {
+    @Transactional
+    public String changeMemberInfo(MemberDto changeInfo) {
         Member member = repository.findById(changeInfo.getMemberId())
                 .orElseThrow(() -> new UsernameNotFoundException("아이디를 찾을 수 없습니다!"));
 
-        member.changeMemberInfo(changeInfo.getEmail(), changeInfo.getPhone(), changeInfo.getName(), changeInfo.getAddress(), changeInfo.getAddressDetail());
+        Optional<Member> checkPhone = repository.findByPhone(changeInfo.getPhone());
 
-        repository.save(member);
+        if (!checkPhone.isPresent() || member.getPhone().equals(changeInfo.getPhone())) {
+            member.changeMemberInfo(changeInfo.getEmail(), changeInfo.getPhone(), changeInfo.getName(),
+                    changeInfo.getAddress(), changeInfo.getAddressDetail());
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            changeInfo.setPassword(encoder.encode(changeInfo.getPassword()));
+            member.changePassword(changeInfo.getPassword());
 
-    }
-
-    // 비밀번호 변경
-    @Override
-    public void changePassword(MemberDto changeMember) {
-        Member member = repository.findById(changeMember.getMemberId())
-                .orElseThrow(() -> new UsernameNotFoundException("아이디를 찾을 수 없습니다!"));
-
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        changeMember.setPassword(encoder.encode(changeMember.getPassword()));
-
-        member.changePassword(changeMember.getPassword());
-        repository.save(member);
+            return repository.save(member).getMemberId();
+        } else {
+            return "phone"; // 존재하는 휴대폰 번호
+        }
     }
 
     // <editor-fold desc="시큐리티 관련 오버라이드">

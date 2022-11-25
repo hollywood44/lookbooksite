@@ -108,18 +108,6 @@ class MemberServiceTest {
         memberService.changeMemberInfo(dto);
     }
 
-    // 회원 정보 수정(비밀번호 변경 o 경우)
-    @Test
-    @Rollback(value = false)
-    public void changeMemberInfoIncludePW(){
-        MemberDto dto = MemberDto.builder()
-                .memberId("member1")
-                .password("12345")
-                .build();
-
-        memberService.changePassword(dto);
-    }
-
     //</editor-fold>
 
 }

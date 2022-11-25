@@ -35,7 +35,6 @@ public class MemberDto {
 
     private String auth;
 
-    @NotEmpty(message = "성별은 필수항목입니다.")
     private String gender;
 
     @NotEmpty(message = "주소는 필수항목입니다.")
