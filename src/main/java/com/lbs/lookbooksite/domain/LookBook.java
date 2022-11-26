@@ -1,6 +1,7 @@
 package com.lbs.lookbooksite.domain;
 
 import com.lbs.lookbooksite.domain.timeEntities.BaseTimeEntity;
+import com.lbs.lookbooksite.dto.lookbook.LookbookDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -47,8 +48,19 @@ public class LookBook extends BaseTimeEntity {
         lookbookImages.add(lookBook_image);
     }
 
-    public void deleteImgs(Long lookbookImgId) {
+    public void deleteImg(Long lookbookImgId) {
         lookbookImages.removeIf(img -> (img.getImageId() == (lookbookImgId)));
+    }
+
+    public void deleteAllImgs() {
+        lookbookImages.clear();
+    }
+
+    public void modifyWithOutImg(LookbookDto dto) {
+        this.lookbookTitle = dto.getLookbookTitle();
+        this.brand = dto.getBrand();
+        this.description = dto.getDescription();
+        this.styleTag = dto.getStyleTag();
     }
 
     //</editor-fold>

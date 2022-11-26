@@ -44,6 +44,22 @@ public class LookbookController {
         return "/member/lookbook/lookbookPost_page";
     }
 
+    @GetMapping("/modify/{lookbookId}")
+    public String lookbookModifyPage(Model model,@PathVariable("lookbookId") Long lookbookId) {
+        LookbookDto lookbookDto = lookBookService.getLookbookDetail(lookbookId);
+        lookbookDto.setDescription(lookbookDto.getDescription().replace("<br>","\n"));
+        model.addAttribute("lookbookDto",lookbookDto);
+
+        return "/member/lookbook/lookbookModify_page";
+    }
+
+    @GetMapping("/delete-img")
+    public String lookbookImageDelete(@RequestParam("imageId") Long imageId,@RequestParam("lookbookId") Long lookbookId) {
+        lookBookService.deleteLookbookImg(imageId);
+
+        return "redirect:/lookbook/modify/"+lookbookId;
+    }
+
 
     @PostMapping("/post")
     public String lookbookPosting(@Valid LookbookDto lookbookDto, BindingResult bindingResult) {
@@ -77,4 +93,35 @@ public class LookbookController {
 
         return "redirect:/lookbook/home";
     }
+
+    @PostMapping("/modify")
+    public String lookbookModify(@Valid LookbookDto lookbookDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "/lookbook/modify/"+lookbookDto.getLookbookId();
+        }
+
+        // 들어온 파일이 이미지가 아니거나, 비어있을 경우 체크
+        int checkFileIsNull = 0;
+        for (MultipartFile img : lookbookDto.getGetImages()) {
+            File checkfile = new File(img.getOriginalFilename());
+            String type = null;
+            try {
+                type = Files.probeContentType(checkfile.toPath());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (img.isEmpty() || !type.startsWith("image")) {
+                checkFileIsNull = 0;
+            } else {
+                checkFileIsNull = 1;
+            }
+        }
+        lookbookDto.setDescription(lookbookDto.getDescription().replace("\n","<br>"));
+
+        lookBookService.modifyLookbook(lookbookDto,checkFileIsNull);
+
+        return "redirect:/lookbook/detail/"+lookbookDto.getLookbookId();
+    }
+
+
 }

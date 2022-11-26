@@ -7,7 +7,9 @@ import com.lbs.lookbooksite.domain.LookBook_Image;
 import com.lbs.lookbooksite.domain.Product_Image;
 import com.lbs.lookbooksite.dto.board.BoardDto;
 import com.lbs.lookbooksite.dto.lookbook.LookbookDto;
+import com.lbs.lookbooksite.dto.lookbook.Lookbook_ImageDto;
 import com.lbs.lookbooksite.repository.LookBookRepository;
+import com.lbs.lookbooksite.repository.LookBook_ImageRepository;
 import lombok.RequiredArgsConstructor;
 import net.coobird.thumbnailator.Thumbnailator;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,6 +36,7 @@ import java.util.function.Function;
 public class LookBookServiceImpl implements LookBookService {
 
     private final LookBookRepository lookBookRepository;
+    private final LookBook_ImageRepository imageRepository;
     private final FileManager fileManager;
 
     //<editor-fold desc="포스팅관련">
@@ -100,6 +103,58 @@ public class LookBookServiceImpl implements LookBookService {
         }
         return null;
     }
+
+    @Override
+    public Long modifyLookbook(LookbookDto modify, int checkStatus) {
+
+        LookBook modifyLB = lookBookRepository.findById(modify.getLookbookId()).get();
+        modifyLB.modifyWithOutImg(modify);
+        if (checkStatus == 1) {
+            modifyLB.deleteAllImgs();
+            try {
+                for (MultipartFile img : modify.getGetImages()) {
+                    // 실제 파일명
+                    String originName = img.getOriginalFilename();
+                    // 랜덤 파일명 생성
+                    String uuid = UUID.randomUUID().toString();
+                    // 저장될 파일명(랜덤파일명_실제파일명)
+                    String savedName = uuid + "_" + originName;
+                    // 저장할 위치경로
+                    Path savePath = Paths.get(uploadPath + File.separator + makeFolder() + File.separator + savedName);
+
+                    // 파일 업로드
+                    fileManager.fileUpload(img, savePath);
+
+                    // /~~Img/**로 사용하기 쉽게  (/boardImg/년/월/일/파일명)으로 저장
+                    int index = savePath.toString().lastIndexOf("/lookBookImg");
+                    String storedPath = savePath.toString().substring(index);
+
+                    LookBook_Image lookBook_image = LookBook_Image.builder()
+                            .storedName(savedName)
+                            .originName(originName)
+                            .storedPath(storedPath)
+                            .build();
+                    // 영속성 전이
+                    modifyLB.addImgs(lookBook_image);
+                }
+                //DB에 저장
+                return lookBookRepository.save(modifyLB).getLookbookId();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return lookBookRepository.save(modifyLB).getLookbookId();
+    }
+
+    @Override
+    public Long deleteLookbookImg(Long imageId) {
+        LookBook_Image img = imageRepository.findById(imageId).get();
+        imageRepository.delete(img);
+
+        return imageId;
+    }
+
     //</editor-fold>
 
     //<editor-fold desc="룩북 가져오기 관련">

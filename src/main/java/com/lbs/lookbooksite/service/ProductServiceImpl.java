@@ -176,12 +176,6 @@ public class ProductServiceImpl implements ProductService {
                     // 파일 업로드
                     fileManager.fileUpload(img, savePath);
 
-                    // 썸네일 생성 (나중에 썸네일 가지고 오고 싶을때
-                    // lastindexof "_" 위치를 "_s_"로 replace해서 사용)
-                    String thumbnailSaveName = productFilePath + File.separator + makeFolder() + File.separator + uuid + "_s_" + originName;
-                    File thumbnailFile = new File(thumbnailSaveName);
-                    Thumbnailator.createThumbnail(savePath.toFile(), thumbnailFile, 200, 200);
-
                     // /boardImg/**로 사용하기 쉽게  (/boardImg/년/월/일/파일명)으로 저장
                     int index = savePath.toString().lastIndexOf("/productImg");
                     String storedPath = savePath.toString().substring(index);
@@ -200,10 +194,8 @@ public class ProductServiceImpl implements ProductService {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else {
-            return repository.save(modiProduct).getProductId();
         }
-        return null;
+            return repository.save(modiProduct).getProductId();
     }
 
 

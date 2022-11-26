@@ -18,18 +18,24 @@
             <form th:action="@{/lookbook/modify}" method="post" enctype="multipart/form-data" th:object="${lookbookDto}">
                 <sec:csrfInput />
                 <div class="row gx-4 gx-lg-5">
-                <div class="col-md-7"><img class="card-img-top mb-5 mb-md-0" th:src="${lookbookDto.returnImages[0].storedPath}" alt="..." /></div>
-                <div class="col-md-4">
+                <th:block th:each="img, stat : ${lookbookDto.returnImages}">
+                    <div class="col-md-7">
+                    <img class="card-img-top mb-5 mb-md-0" th:src="${img.storedPath}" alt="..." style="height:300px;width:300px;"/>
+                        <a th:href="@{|/lookbook/delete-img?imageId=${img.imageId}&lookbookId=${lookbookDto.lookbookId}|}"><-이미지 삭제</a>
+                </div>
+                    <div class="col-md-4" th:if="${stat.count==1}">
                     <div th:replace="fragment/form_errors :: formErrorsFragment"></div>
-                    <div class="small mb-1"><input type="text" class="form-control" placeholder="룩북 제목" th:field="*{lookbookTitle}"></div>
-                    <div class="small mb-1"><input type="text" class="form-control" placeholder="브랜드명" th:field="*{brand}"></div>
-                    <div><textarea placeholder="상품설명" class="form-control" th:field="*{description}"></textarea></div>
-                    <div class="small mb-1"><input type="text" class="form-control" placeholder="스타일태그" th:field="*{styleTag}"></div>
+                    <div class="small mb-1">룩북 아이디<input type="text" class="form-control" placeholder="룩북 ID" th:field="*{lookbookId}" readonly></div>
+                    <div class="small mb-1">룩북 제목<input type="text" class="form-control" placeholder="룩북 제목" th:field="*{lookbookTitle}"></div>
+                    <div class="small mb-1">브랜드명<input type="text" class="form-control" placeholder="브랜드명" th:field="*{brand}"></div>
+                    <div>룩북설명<textarea placeholder="룩북설명" class="form-control" th:field="*{description}"></textarea></div>
+                    <div class="small mb-1">스타일태그<input type="text" class="form-control" placeholder="스타일태그" th:field="*{styleTag}"></div>
                     <div class="mb-2"><input class="form-control" type="file" id="formFile" th:field="*{getImages}" multiple></div>
                     <div class="text-end" id="board-submit">
                         <input type="submit" value="등록" class="btn btn-secondary">
                     </div>
                 </div>
+                </th:block>
             </div>
             </form>
         </div>
