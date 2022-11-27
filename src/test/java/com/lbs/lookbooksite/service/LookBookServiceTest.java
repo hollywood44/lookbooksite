@@ -24,7 +24,7 @@ class LookBookServiceTest {
         Long lookbookId = 1L;
 
         LookBook testlb = lookBookRepository.findById(lookbookId).get();
-        testlb.deleteImgs(5L);
+        testlb.deleteImg(5L);
 
         lookBookRepository.save(testlb);
 
