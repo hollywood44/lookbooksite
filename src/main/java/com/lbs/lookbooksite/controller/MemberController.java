@@ -2,7 +2,9 @@ package com.lbs.lookbooksite.controller;
 
 import com.lbs.lookbooksite.domain.Member;
 import com.lbs.lookbooksite.dto.MemberDto;
+import com.lbs.lookbooksite.dto.styleTag.StyleTagDto;
 import com.lbs.lookbooksite.service.MemberService;
+import com.lbs.lookbooksite.service.StyleTagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -12,8 +14,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -21,6 +28,7 @@ import javax.validation.Valid;
 public class MemberController {
 
     private final MemberService memberService;
+    private final StyleTagService styleTagService;
 
     //<editor-fold desc="GET">
 
@@ -58,6 +66,39 @@ public class MemberController {
         return "member/memberModify_page";
     }
 
+    @GetMapping("/styleTag")
+    public String myStyleTag(Model model,@AuthenticationPrincipal Member member) {
+        // 모든 스타일 태그 해쉬맵
+        Map<String,String> allTagList = styleTagService.getAllStyleTags().getStyleTag();
+
+        // 내가 선호하는 스타일 태그
+        List<String> myStyleTagList = memberService.getMyStyleTag(member);
+
+        if (!myStyleTagList.isEmpty()) {
+            // 선호하지 않는 태그 해쉬맵
+            Map<String, String> notLikeTags = new HashMap<>(allTagList);
+            for (String like : myStyleTagList) {
+                notLikeTags.remove(like);
+            }
+            // 선호하는 태그 해쉬맵
+            Map<String, String> likeTags = new HashMap<>();
+            for (String like : myStyleTagList) {
+                String likeSoPut = allTagList.get(like);
+                likeTags.put(like, likeSoPut);
+            }
+
+            model.addAttribute("likeTags", likeTags);
+            model.addAttribute("notLikeTags", notLikeTags);
+        } else {
+            model.addAttribute("notLikeTags",allTagList);
+        }
+
+
+
+
+        return "member/myStyleTag_page";
+    }
+
     //</editor-fold>
 
     //<editor-fold desc="POST">
@@ -68,6 +109,7 @@ public class MemberController {
             return "member/signUp_page";
         }
         memberDto.setAuth("ROLE_MEMBER");
+        memberDto.setStyleTag("");
 
         try {
             memberService.signup(memberDto);
@@ -102,5 +144,14 @@ public class MemberController {
     }
     //</editor-fold>
 
+    @PostMapping("/styleTag")
+    public String modifyStyleTag(@RequestParam(value = "styleTag", defaultValue = "") List<String> styleTag,@AuthenticationPrincipal Member loginedMember) {
 
+        if (!styleTag.isEmpty()) {
+            memberService.changeStyleTag(styleTag,loginedMember);
+            return "redirect:/member/styleTag";
+        } else {
+            return "redirect:/member/styleTag";
+        }
+    }
 }

@@ -13,41 +13,40 @@
 
     <div class="container">
         <div class="d-flex flex-column align-items-center">
-            <div class="jumbotron" style="padding-top: 100px;width:400px">
+            <div class="jumbotron" style="padding-top: 100px;width:600px">
                 <form method="post" th:action="@{/member/styleTag}">
                     <sec:csrfInput />
                     <h3 style="text-align: center;">내 스타일 태그 관리</h3>
-                    <div th:replace="fragment/form_errors :: formErrorsFragment"></div>
                     <div>
                         관심이 있는 스타일에 체크, 관심 없는 스타일에 체크해제를 해주시고 <br>
                         제출 버튼을 눌러주세요!
                     </div>
-                    <p>관심 있는 스타일 태그</p>
 
-                    <div class="form-check form-check-inline mb-2">
-                        <input type="checkbox" class="form-check-input" checked>#tag1
+                    <hr>
+                    <div>
+                        <p>관심 있는 스타일 태그</p>
+                        <div class="form-check form-check-inline mb-2" th:each="like : ${likeTags}" th:if="${not #strings.isEmpty(likeTags)}">
+                            <input type="checkbox" class="form-check-input" th:value="${like.key}" name="styleTag" checked>
+                            <span>[[${like.key}]]</span>
+                            <img style="width:150px;height:150px;" th:src="${like.value}">
+                        </div>
+                        <h3 th:unless="${not #strings.isEmpty(likeTags)}" class="text-center">
+                            스타일태그를 선택해 주세요
+                        </h3>
                     </div>
-                    <div class="form-check form-check-inline mb-2">
-                        <input type="checkbox" class="form-check-input" checked>#tag2
-                    </div>
-                    <div class="form-check form-check-inline mb-2">
-                        <input type="checkbox" class="form-check-input" checked>#tag3
-                    </div>
-
+                    <hr />
                     <p>관심 없는 스타일 태그</p>
-
-                    <div class="form-check form-check-inline mb-2">
-                        <input type="checkbox" class="form-check-input" checked>#tag4
-                    </div>
-                    <div class="form-check form-check-inline mb-2">
-                        <input type="checkbox" class="form-check-input" checked>#tag5
-                    </div>
-                    <div class="form-check form-check-inline mb-2">
-                        <input type="checkbox" class="form-check-input" checked>#tag6
+                    <div class="align-center">
+                        <div class="form-check form-check-inline mb-2" th:each="notLike : ${notLikeTags}">
+                            <input type="checkbox" class="form-check-input" th:value="${notLike.key}" name="styleTag">
+                            <span>[[${notLike.key}]]</span>
+                            <img style="width:150px;height:150px;" th:src="${notLike.value}">
+                        </div>
                     </div>
 
 
-                    <input type="submit" class="btn btn-primary form-control" style="margin-top:5px;" value="제출">
+
+                    <input type="submit" class="btn btn-primary form-control mb-5" style="margin-top:5px;" value="제출">
                 </form>
             </div>
         </div>

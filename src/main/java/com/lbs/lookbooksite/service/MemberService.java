@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Service
 public interface MemberService extends UserDetailsService {
@@ -56,8 +57,10 @@ public interface MemberService extends UserDetailsService {
     public String signup(MemberDto memberInfo);
     // 회원 정보 가져오기
     public MemberDto getMyInfo(Member member);
+    // 스타일태그 가져오기
+    public List<String> getMyStyleTag(Member member);
     // 스타일태그 변경
-    public void changeStyleTag(MemberDto dto);
+    public void changeStyleTag(List<String> tagList,Member loginedMember);
     // 멤버 정보 수정
     public String changeMemberInfo(MemberDto changeMember);
 }

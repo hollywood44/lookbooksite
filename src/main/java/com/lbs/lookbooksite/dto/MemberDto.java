@@ -43,7 +43,7 @@ public class MemberDto {
     @NotEmpty(message = "주소는 필수항목입니다.")
     private String addressDetail;
 
-    private String[] styleTag;
+    private String styleTag;
 
 
 

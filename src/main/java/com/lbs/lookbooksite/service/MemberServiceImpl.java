@@ -12,6 +12,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -49,14 +52,28 @@ public class MemberServiceImpl implements MemberService{
 
     // 스타일 태그 변경
     @Override
-    public void changeStyleTag(MemberDto dto) {
-        Member member = repository.findById(dto.getMemberId())
+    public void changeStyleTag(List<String> tagList,Member loginedMember) {
+        Member member = repository.findById(loginedMember.getMemberId())
                 .orElseThrow(() -> new UsernameNotFoundException("아이디를 찾을 수 없습니다!"));
 
-        String tags = String.join("#", dto.getStyleTag());
+        String tags = String.join(",",tagList);
+
         member.changeStyleTag(tags);
 
         repository.save(member);
+    }
+
+    @Override
+    public List<String> getMyStyleTag(Member member) {
+        Member loginedMember = repository.findById(member.getMemberId()).get();
+
+        String checkNull = loginedMember.getStyleTag();
+        if (checkNull.isEmpty()) {
+            return new ArrayList<>();
+        } else {
+            List<String> myStyleTagList = new ArrayList<>(Arrays.asList(loginedMember.getStyleTag().split(",")));
+            return myStyleTagList;
+        }
     }
 
     // 회원 정보 변경
