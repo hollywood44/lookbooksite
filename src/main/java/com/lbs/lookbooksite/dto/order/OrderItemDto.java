@@ -15,6 +15,7 @@ public class OrderItemDto {
 
     private Long orderItemId;
     private String orderId;
+    private String productName;
 
     // 주문 시 받을 값 -> 3개
     private Long cartItemId;

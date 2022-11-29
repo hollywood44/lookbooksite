@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/baseLayout}"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta charset="UTF-8">
+    <title>My Order</title>
+</head>
+<body>
+<th:block layout:fragment="content">
+
+<section style="flex:1;min-height:94vh; background-color:#F2F2F2;" id="main-section">
+    <div class="bg-white" id="order-header">
+        <th:block th:if="${not #strings.isEmpty(paging)}">
+            <h2 class="display-4 fw-bolder ms-5 pt-5" th:text="|주문(${paging.totalPages})|">주문(1)</h2>
+        </th:block>
+        <th:block th:unless="${not #strings.isEmpty(paging)}">
+            <h2 class="display-4 fw-bolder ms-5 pt-5">주문(0)</h2>
+        </th:block>
+    </div>
+
+    <div class="container-sm mt-5" style="min-height:50vh">
+
+        <div class="row justify-content-center" id="item-container">
+<!--주문 있을 때-->
+            <th:block th:if="${not #strings.isEmpty(paging)}">
+            <div class="order-item col-sm-10 border text-start mt-3 mb-5 p-3 bg-white" th:each="order : ${paging}" style="border-radius:3.5rem;">
+                <div class="d-flex justify-content-between mx-5">
+                    <div>주문번호 :[[${order.orderId}]]</div>
+                    <div>주문일시 :[[${order.orderDate}]]</div>
+                </div>
+
+                <div class="d-flex mx-5 justify-content-between">
+                    <div>주소 :[[${order.address}]]([[${order.addressDetail}]])</div>
+                    <div>받는분성함 :[[${order.receiverName}]]</div>
+                </div>
+                <div class="d-flex mx-5 mb-4 justify-content-end">
+                    <div>주문상태 :[[${order.orderStatus}]]</div>
+                </div>
+                <div class="row text-center" >
+                    <div class="col-sm-4">상품코드</div>
+                    <div class="col-sm-4">상품명</div>
+                    <div class="col-sm-4">상품갯수</div>
+                </div>
+                <hr>
+                <div class="row text-center mb-4" th:each="item : ${order.orderItemDtos}" th:if="${not #strings.isEmpty(order.orderItemDtos)}">
+                    <div class="col-sm-4"><a th:href="@{|/product/detail/${item.productId}|}">[[${item.productId}]]</a></div>
+                    <div class="col-sm-4"><a th:href="@{|/product/detail/${item.productId}|}">[[${item.productName}]]</a></div>
+                        <div class="col-sm-4">[[${item.itemCount}]]</div>
+                </div>
+                <hr>
+                <div class="d-flex mx-5 mb-4 justify-content-end">
+                    <div>총 금액 :[[${order.totalPrice}]]</div>
+                </div>
+            </div>
+            </th:block>
+<!--주문 없을 때-->
+            <th:block th:unless="${not #strings.isEmpty(paging)}">
+                <div class="order-item col-sm-10 border rounded text-start mt-3 mb-5 bg-white">
+                    <div class="row align-items-center">
+                        <h1>주문이 없습니다.</h1>
+                    </div>
+                </div>
+            </th:block>
+
+        </div>
+    </div>
+
+</section>
+</th:block>
+
+</body>
+</html>

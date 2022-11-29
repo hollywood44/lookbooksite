@@ -2,11 +2,14 @@ package com.lbs.lookbooksite.controller;
 
 import com.lbs.lookbooksite.domain.Member;
 import com.lbs.lookbooksite.dto.MemberDto;
+import com.lbs.lookbooksite.dto.board.BoardDto;
 import com.lbs.lookbooksite.dto.styleTag.StyleTagDto;
+import com.lbs.lookbooksite.service.BoardService;
 import com.lbs.lookbooksite.service.MemberService;
 import com.lbs.lookbooksite.service.StyleTagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,6 +32,7 @@ public class MemberController {
 
     private final MemberService memberService;
     private final StyleTagService styleTagService;
+    private final BoardService boardService;
 
     //<editor-fold desc="GET">
 
@@ -39,12 +43,12 @@ public class MemberController {
 
     @GetMapping("/signIn")
     public String loginPage() {
-        return "member/signIn_page";
+        return "member/personal/signIn_page";
     }
 
     @GetMapping("/signUp")
     public String signUpPage(MemberDto memberDto) {
-        return "member/signUp_page";
+        return "member/personal/signUp_page";
     }
 
     @GetMapping("/denied")
@@ -56,14 +60,14 @@ public class MemberController {
     public String myInfoPage(Model model, @AuthenticationPrincipal Member loginedMember) {
         model.addAttribute("memberDto",memberService.getMyInfo(loginedMember));
 
-        return "member/myInfo_page";
+        return "member/personal/myInfo_page";
     }
 
     @GetMapping("/modify")
     public String modifyPage(Model model, @AuthenticationPrincipal Member loginedMember) {
         model.addAttribute("memberDto",memberService.getMyInfo(loginedMember));
 
-        return "member/memberModify_page";
+        return "member/personal/memberModify_page";
     }
 
     @GetMapping("/styleTag")
@@ -93,10 +97,19 @@ public class MemberController {
             model.addAttribute("notLikeTags",allTagList);
         }
 
+        return "member/personal/myStyleTag_page";
+    }
 
+    @GetMapping("/myBoard")
+    public String myBoardList(Model model,@AuthenticationPrincipal Member loginedMember,@RequestParam(value = "page", defaultValue = "1") int page) {
+        page = page -1;
 
+        Page<BoardDto> paging = boardService.getMyBoardList(page,loginedMember);
 
-        return "member/myStyleTag_page";
+        model.addAttribute("paging", paging);
+        model.addAttribute("maxPage",5);
+
+        return "member/board/myBoard_page";
     }
 
     //</editor-fold>
@@ -106,7 +119,7 @@ public class MemberController {
     public String signUp(@Valid MemberDto memberDto, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
-            return "member/signUp_page";
+            return "member/personal/signUp_page";
         }
         memberDto.setAuth("ROLE_MEMBER");
         memberDto.setStyleTag("");
@@ -116,12 +129,12 @@ public class MemberController {
         } catch (DataIntegrityViolationException e) {
             e.printStackTrace();
             bindingResult.reject("signupFailed", "이미 등록된 사용자입니다.");
-            return "member/signUp_page";
+            return "member/personal/signUp_page";
         }catch(Exception e) {
             System.out.println("controller" + memberDto);
             e.printStackTrace();
             bindingResult.reject("signupFailed", "error");
-            return "member/signUp_page";
+            return "member/personal/signUp_page";
         }
 
         return "redirect:/member/main";
@@ -130,14 +143,14 @@ public class MemberController {
     @PostMapping("/modify")
     public String memberInfoModify(@Valid MemberDto memberDto, BindingResult bindingResult, @AuthenticationPrincipal Member loginedMember) {
         if (bindingResult.hasErrors()) {
-            return "member/memberModify_page";
+            return "member/personal/memberModify_page";
         }
 
         String status = memberService.changeMemberInfo(memberDto);
 
         if (status.equals("phone")) {
             bindingResult.rejectValue("phone", "already phone number has exist","이미 있는 휴대전화 번호 입니다.");
-            return "member/memberModify_page";
+            return "member/personal/memberModify_page";
         }
 
         return "redirect:/member/modify";

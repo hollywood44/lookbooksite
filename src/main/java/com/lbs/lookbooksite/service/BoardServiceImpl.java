@@ -200,6 +200,17 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
+    public Page<BoardDto> getMyBoardList(int page,Member loginedMember) {
+        Function<Board, BoardDto> fn = (entity -> (entityToDtoNoneDetail(entity)));
+        Sort sort = Sort.by("boardId").descending();
+        Pageable pageable = PageRequest.of(page,10,sort); // page(번호)부터 10개씩 잘라서 보겠다
+        Page<Board> entityList = boardRepository.findByWriter(loginedMember,pageable);
+        Page<BoardDto> boardList = entityList.map(fn);
+
+        return boardList;
+    }
+
+    @Override
     public BoardDto getBoard(Long boardId) {
         Optional<Board> entity = boardRepository.findById(boardId);
         if (entity.isPresent()) {

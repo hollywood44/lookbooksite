@@ -44,7 +44,10 @@ public class BoardController {
     public String boardListPage(Model model, @RequestParam(value = "page", defaultValue = "1") int page) {
         page = page -1;
         Page<BoardDto> paging = boardService.getAllBoardList(page);
+
         model.addAttribute("paging", paging);
+        model.addAttribute("maxPage",10);
+
         return "member/board/boardList_page";
     }
 

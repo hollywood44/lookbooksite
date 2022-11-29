@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotEmpty;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -24,6 +25,7 @@ public class OrderDto {
     private String receiverName;
 
     private int totalPrice;
+    private String orderDate;
 
     private List<OrderItemDto> orderItemDtos;
 }

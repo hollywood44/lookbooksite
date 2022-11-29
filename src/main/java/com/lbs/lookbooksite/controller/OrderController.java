@@ -1,12 +1,14 @@
 package com.lbs.lookbooksite.controller;
 
 import com.lbs.lookbooksite.domain.Member;
+import com.lbs.lookbooksite.dto.board.BoardDto;
 import com.lbs.lookbooksite.dto.order.OrderDto;
 import com.lbs.lookbooksite.dto.order.OrderItemDto;
 import com.lbs.lookbooksite.dto.order.OrderProceeding;
 import com.lbs.lookbooksite.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.Banner;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
@@ -32,6 +34,18 @@ public class OrderController {
     public String proceedingPage(OrderProceeding orderProceeding, OrderDto orderDto, Model model) {
         model.addAttribute("proceed",orderProceeding);
         return"/member/order/orderProceeding_page";
+    }
+
+    @GetMapping("/myOrder")
+    public String myOrderPage(Model model,@AuthenticationPrincipal Member loginedMember,@RequestParam(value = "page", defaultValue = "1") int page) {
+        page = page -1;
+
+        Page<OrderDto> paging = orderService.getMyOrder(loginedMember,page);
+
+        model.addAttribute("paging", paging);
+        model.addAttribute("maxPage",5);
+
+        return "member/order/myOrder_page";
     }
 
     @GetMapping("/orderSuccess")

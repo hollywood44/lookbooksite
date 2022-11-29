@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<!-- Navigation-->
+<div th:fragment="memberMenuNav" class="col-sm-2">
+
+  <div id="member-Nav-main" class="text-center">
+    <div class="member-menu">
+      <a class="btn member-menu-item" href="/member/my-info">내 정보</a>
+      <a class="btn member-menu-item" href="/member/myBoard">내 글</a>
+      <a class="btn member-menu-item" href="/member/styleTag">스타일태그 관리</a>
+      <a class="btn member-menu-item" href="/order/myOrder">내 주문</a>
+      <a class="btn member-menu-item" href="#">회원탈퇴</a>
+    </div>
+  </div>
+
+
+</div>
+</html>

@@ -36,7 +36,7 @@ class MemberServiceTest {
     @Test
     @Rollback(value = false)
     void adminSignUp() {
-        String[] tags = {"minimal", "street"};
+        String tag = "";
 
         MemberDto dto = MemberDto.builder()
                 .memberId("admin")
@@ -48,7 +48,7 @@ class MemberServiceTest {
                 .gender("MALE")
                 .address("경상북도 경산시 경산읍 경산길")
                 .addressDetail("룩북빌딩 505호")
-                .styleTag(tags)
+                .styleTag(tag)
                 .build();
 
         System.out.println(memberService.signup(dto));
@@ -57,7 +57,7 @@ class MemberServiceTest {
     @Test
     @Rollback(value = false)
     void userSignUp() {
-        String[] tags = {"minimal", "street"};
+        String tag = "";
 
         MemberDto dto = MemberDto.builder()
                 .memberId("member1")
@@ -69,7 +69,7 @@ class MemberServiceTest {
                 .gender("MALE")
                 .address("경상북도 경산시 경산읍 경산길")
                 .addressDetail("우리집 101호")
-                .styleTag(tags)
+                .styleTag(tag)
                 .build();
 
         System.out.println(memberService.signup(dto));
@@ -78,19 +78,7 @@ class MemberServiceTest {
 
     //<editor-fold desc="회원정보 변경 테스트">
 
-    // 스타일태그 변경 테스트
-    @Test
-    @Rollback(value = false)
-    public void changeStyleTagTest() {
-        String[] tags = {"minimal", "american_casual"};
 
-        MemberDto dto = MemberDto.builder()
-                .memberId("member1")
-                .styleTag(tags)
-                .build();
-
-        memberService.changeStyleTag(dto);
-    }
 
     // 회원 정보 수정(비밀번호 변경 x 경우)
     @Test
