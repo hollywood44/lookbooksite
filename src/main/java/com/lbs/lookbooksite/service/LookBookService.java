@@ -61,4 +61,6 @@ public interface LookBookService {
     Long modifyLookbook(LookbookDto modify, int checkStatus);
     Long deleteLookbookImg(Long imageId);
 
+    Long deleteLookbook(Long lookbookId);
+
 }

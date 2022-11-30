@@ -189,4 +189,12 @@ public class LookBookServiceImpl implements LookBookService {
 
     //</editor-fold>
 
+
+    @Override
+    @Transactional
+    public Long deleteLookbook(Long lookbookId) {
+        lookBookRepository.deleteById(lookbookId);
+
+        return lookbookId;
+    }
 }

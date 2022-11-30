@@ -17,7 +17,7 @@
         <div class="container px-4 px-lg-5 my-5">
             <form th:action="@{/lookbook/delete}" method="post" id="deleteForm" class="row">
                 <sec:csrfInput />
-                <input type="hidden" name="boardId" th:value="${lookbookDto.lookbookId}" />
+                <input type="hidden" name="lookbookId" th:value="${lookbookDto.lookbookId}" />
                 <div class="input-group">
                     <div class="col-sm-11 text-end">
                         <button class="btn btn-danger mb-3" id="deleteBtn" type="submit">삭제</button>

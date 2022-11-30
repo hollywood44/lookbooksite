@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.io.File;
@@ -121,6 +122,13 @@ public class LookbookController {
         lookBookService.modifyLookbook(lookbookDto,checkFileIsNull);
 
         return "redirect:/lookbook/detail/"+lookbookDto.getLookbookId();
+    }
+
+    @PostMapping("/delete")
+    public String deleteLookBook(@RequestParam("lookbookId") Long lookbookId, RedirectAttributes redirectAttributes) {
+        lookBookService.deleteLookbook(lookbookId);
+//        redirectAttributes.addFlashAttribute("deleteMsg", lookbookId + "룩북이 삭제 되었습니다.");
+        return "redirect:/lookbook/home";
     }
 
 
