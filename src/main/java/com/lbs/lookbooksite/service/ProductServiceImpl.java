@@ -200,4 +200,12 @@ public class ProductServiceImpl implements ProductService {
 
 
     //</editor-fold>
+
+
+    @Override
+    @Transactional
+    public String deleteProduct(String productId) {
+        repository.deleteById(productId);
+        return productId;
+    }
 }

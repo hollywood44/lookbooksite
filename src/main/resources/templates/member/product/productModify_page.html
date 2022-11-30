@@ -15,9 +15,10 @@
     <!-- Product section-->
     <section class="py-5">
         <div class="container px-4 px-lg-5 my-5">
+<!--            삭제를 위한 폼-->
             <form th:action="@{/product/delete}" method="post" id="deleteForm" class="row">
                 <sec:csrfInput />
-                <input type="hidden" name="boardId" th:value="${productDto.productId}" />
+                <input type="hidden" name="productId" th:value="${productDto.productId}" />
                 <div class="input-group">
                     <div class="col-sm-11 text-start">
                         <button class="btn btn-danger mb-3" id="deleteBtn" type="submit">삭제</button>

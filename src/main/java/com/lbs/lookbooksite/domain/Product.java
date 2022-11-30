@@ -39,6 +39,12 @@ public class Product extends BaseTimeEntity {
     @OneToMany(mappedBy = "product",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Product_Image> productImages = new ArrayList<>();
 
+    @OneToMany(mappedBy = "productId",cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<OrderItem> orderItems;
+
+    @OneToMany(mappedBy = "productId",cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<CartItem> cartItems;
+
     //<editor-fold desc="메소드">
 
     // 상품업로드만으로 사진도 같이 업로드 하려고 사용

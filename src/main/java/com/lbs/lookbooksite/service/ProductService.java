@@ -57,4 +57,7 @@ public interface ProductService {
     ProductDto getProduct(String productId);
 
     String modifyProduct(ProductDto dto,int checkStatus);
+
+    // 상품 삭제
+    String deleteProduct(String productId);
 }
