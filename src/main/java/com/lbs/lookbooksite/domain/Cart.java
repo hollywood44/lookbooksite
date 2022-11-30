@@ -24,7 +24,7 @@ public class Cart {
     private Member memberId;
 
     @Builder.Default
-    @OneToMany(mappedBy = "cartId",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "cartId",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<CartItem> cartItems = new ArrayList<>();
 
     //===============================비즈니스 로직===============================//

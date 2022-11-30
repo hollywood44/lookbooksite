@@ -7,7 +7,9 @@ import com.lbs.lookbooksite.repository.CartRepository;
 import com.lbs.lookbooksite.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -54,5 +56,14 @@ public class CartServiceImpl implements CartService {
         }
 
         return null;
+    }
+
+    @Override
+    @Transactional
+    public List<Long> cartItemDelete(List<Long> cartItemList) {
+        for (Long id : cartItemList) {
+            itemRepository.deleteById(id);
+        }
+        return cartItemList;
     }
 }

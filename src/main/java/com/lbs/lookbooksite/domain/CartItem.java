@@ -18,11 +18,11 @@ public class CartItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cartItemId;
 
-    @ManyToOne(targetEntity = Cart.class)
+    @ManyToOne(targetEntity = Cart.class,fetch = FetchType.LAZY)
     @JoinColumn(name = "cartId")
     private Cart cartId;
 
-    @ManyToOne(targetEntity = Product.class)
+    @ManyToOne(targetEntity = Product.class,fetch = FetchType.LAZY)
     @JoinColumn(name = "productId")
     private Product productId;
 

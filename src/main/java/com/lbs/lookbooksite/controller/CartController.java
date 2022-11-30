@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/cart")
@@ -38,6 +41,12 @@ public class CartController {
         cartService.itemAddToCart(itemDto.getProductId(), itemDto.getItemCount(), loginedMember);
 
         return "redirect:/product/detail/"+itemDto.getProductId();
+    }
+
+    @PostMapping("/delete")
+    public String cartItemDelete(@RequestParam("cartItemId")List<Long> deleteItemList) {
+        cartService.cartItemDelete(deleteItemList);
+        return "redirect:/cart/my-cart";
     }
     //</editor-fold>
 

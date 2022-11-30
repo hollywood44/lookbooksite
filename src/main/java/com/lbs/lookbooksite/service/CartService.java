@@ -37,4 +37,6 @@ public interface CartService {
     Long itemAddToCart(String productId, int itemCount, Member loginedMember);
 
     CartDto getMyCart(Member loginedMember);
+
+    List<Long> cartItemDelete(List<Long> cartItemList);
 }
