@@ -260,5 +260,11 @@ public class BoardServiceImpl implements BoardService{
         commentRepository.save(putComment);
     }
 
+    @Override
+    @Transactional
+    public Long deleteBoard(Long boardId) {
+        boardRepository.deleteById(boardId);
 
+        return boardId;
+    }
 }

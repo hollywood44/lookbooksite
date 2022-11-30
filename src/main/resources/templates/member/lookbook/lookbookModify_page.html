@@ -15,6 +15,16 @@
     <!-- Product section-->
     <section class="py-5">
         <div class="container px-4 px-lg-5 my-5">
+            <form th:action="@{/lookbook/delete}" method="post" id="deleteForm" class="row">
+                <sec:csrfInput />
+                <input type="hidden" name="boardId" th:value="${lookbookDto.lookbookId}" />
+                <div class="input-group">
+                    <div class="col-sm-11 text-end">
+                        <button class="btn btn-danger mb-3" id="deleteBtn" type="submit">삭제</button>
+                    </div>
+                </div>
+            </form>
+
             <form th:action="@{/lookbook/modify}" method="post" enctype="multipart/form-data" th:object="${lookbookDto}">
                 <sec:csrfInput />
                 <div class="row gx-4 gx-lg-5">

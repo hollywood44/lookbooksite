@@ -83,7 +83,18 @@
 
         </div>
         </section>
+  <script th:inline="javascript">
 
+    /*<![CDATA[*/
+
+    var deleteMsg = [[${deleteMsg}]];
+    if(deleteMsg != null){
+    alert(deleteMsg);
+    }
+
+    /*]]>*/
+
+</script>
 </th:block>
 </body>
 </html>

@@ -138,4 +138,7 @@ public interface BoardService {
     void likeBoard(Member member, Long boardId);
     void postComment(CommentDto commentDto,Member commenter,Long boardId);
 
+    // 게시글 삭제
+    Long deleteBoard(Long boardId);
+
 }

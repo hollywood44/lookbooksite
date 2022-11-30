@@ -49,11 +49,11 @@ public class Board  extends BaseTimeEntity {
 
     // 해당 게시물 댓글
     @Builder.Default
-    @OneToMany(mappedBy = "targetBoard")
+    @OneToMany(mappedBy = "targetBoard",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Comment> commentList = new ArrayList<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "targetBoard")
+    @OneToMany(mappedBy = "targetBoard",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Like> likeList = new ArrayList<>();
 
     public void addImgs(Board_Image board_image) {

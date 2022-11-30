@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.io.File;
@@ -28,16 +29,10 @@ public class BoardController {
 
     private final BoardService boardService;
 
+    //<editor-fold desc="GET">
+
     @GetMapping
     public String boardPage() { return "boardTest"; }
-
-    // 게시글 리스트(paging x)
-//    @GetMapping("/list")
-//    public String boardListPage(Model model) {
-//        List<BoardDto> allBoard = boardService.getAllBoardList();
-//        model.addAttribute("allBoard", allBoard);
-//        return "boardListTest";
-//    }
 
     // 게시글 리스트(paging o)
     @GetMapping("/list")
@@ -91,6 +86,10 @@ public class BoardController {
     public String uploadBoardPage(BoardDto boardDto) {
         return "member/board/boardPost_page";
     }
+
+    //</editor-fold>
+
+    //<editor-fold desc="POST">
 
     // 게시글 등록
     @PostMapping("/upload")
@@ -169,4 +168,15 @@ public class BoardController {
 
         return String.format("redirect:/board/detail/%s", boardId);
     }
+
+    // 게시글 삭제
+    @PostMapping("/delete")
+    public String boardDelete(@RequestParam("boardId") Long boardId, RedirectAttributes redirectAttributes) {
+        boardService.deleteBoard(boardId);
+        redirectAttributes.addFlashAttribute("deleteMsg",boardId+"게시글이 성공적으로 삭제되었습니다.");
+        return "redirect:/board/list";
+    }
+
+    //</editor-fold>
+
 }
