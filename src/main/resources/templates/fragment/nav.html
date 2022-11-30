@@ -20,7 +20,16 @@
         </ul>
       </div>
       <div class="navbar" id="navbarSupportedContent2">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+<!--        알림-->
+        <th:block  sec:authorize="isAuthenticated()" th:if="${noticeCount==0 || noticeCount==null}">
+          <a href="/notice" style="color:black;"><i class="bi bi-bell"></i></a>
+        </th:block>
+
+        <th:block  sec:authorize="isAuthenticated()" th:if="${noticeCount>0}">
+          <a href="/notice" style="color:black;"><i class="bi bi-bell-fill"></i></a>
+        </th:block>
+
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-2">
           <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
             <!-- 로그인되있다면 활성화 -->
             <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"

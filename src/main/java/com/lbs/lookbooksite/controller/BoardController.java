@@ -1,12 +1,11 @@
 package com.lbs.lookbooksite.controller;
 
 import com.lbs.lookbooksite.domain.Member;
-import com.lbs.lookbooksite.dto.MemberDto;
 import com.lbs.lookbooksite.dto.board.BoardDto;
 import com.lbs.lookbooksite.dto.board.CommentDto;
 import com.lbs.lookbooksite.service.BoardService;
+import com.lbs.lookbooksite.service.NoticeService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -19,7 +18,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.validation.Valid;
 import java.io.File;
 import java.nio.file.Files;
-import java.util.List;
 
 
 @Controller
@@ -28,6 +26,7 @@ import java.util.List;
 public class BoardController {
 
     private final BoardService boardService;
+    private final NoticeService noticeService;
 
     //<editor-fold desc="GET">
 
@@ -165,6 +164,8 @@ public class BoardController {
     @PostMapping("/comment/{boardId}")
     public String postComment(@PathVariable("boardId") Long boardId, CommentDto commentDto,@AuthenticationPrincipal Member loginedMember) {
         boardService.postComment(commentDto,loginedMember,boardId);
+
+        noticeService.sendCommentNotice(boardId,loginedMember);
 
         return String.format("redirect:/board/detail/%s", boardId);
     }

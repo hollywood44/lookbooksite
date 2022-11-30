@@ -4,6 +4,7 @@ import com.lbs.lookbooksite.domain.timeEntities.NoticeTimeEntity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "notice_tbl")
@@ -19,9 +20,19 @@ public class Notice extends NoticeTimeEntity {
     private Long noticeId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "memberId")
+    @JoinColumn(referencedColumnName = "memberId",name = "targetMember")
     private Member targetMember;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(referencedColumnName = "memberId",name = "sendMember")
+    private Member sendMember;
+
     private String notice;
+
+    private LocalDateTime readDate;
+
+    public void readNotice() {
+        this.readDate = LocalDateTime.now();
+    }
 
 }

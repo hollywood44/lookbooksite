@@ -17,8 +17,4 @@ public class NoticeTimeEntity {
     // 등록일
     @CreatedDate
     private LocalDateTime regDate;
-
-    // 수정일
-    @LastModifiedDate
-    private LocalDateTime readDate;
 }
