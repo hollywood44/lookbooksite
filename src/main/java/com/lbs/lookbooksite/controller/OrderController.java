@@ -64,8 +64,6 @@ public class OrderController {
     @PostMapping("/putOrder")
     public String putOrder(OrderDto orderDto,@AuthenticationPrincipal Member member) {
 
-        System.out.println(orderDto);
-
         orderService.putOrder(orderDto,member);
 
         return "redirect:/order/orderSuccess";

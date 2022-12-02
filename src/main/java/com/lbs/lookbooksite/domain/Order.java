@@ -42,7 +42,7 @@ public class Order extends OrderTimeEntity {
     private List<OrderItem> orderItems = new ArrayList<>();
 
     public enum OrderStatus {
-        Ready,Cancle,Shipping,Complete
+        Ready,Cancel,Shipping,Complete
     }
 
 
@@ -51,6 +51,10 @@ public class Order extends OrderTimeEntity {
     public void addItem(OrderItem item){
         item.setOrderId(this);
         this.orderItems.add(item);
+    }
+
+    public void changeOrderStatus(OrderStatus orderStatus) {
+        this.orderStatus = orderStatus;
     }
 
 }

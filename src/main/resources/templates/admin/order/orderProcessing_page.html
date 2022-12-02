@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/adminLayout}"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+  <meta charset="UTF-8">
+  <title>주문 관리 페이지</title>
+</head>
+<body>
+
+  <section layout:fragment="content">
+    <div class="border" style="background-color:white;min-height:80vh;">
+        <!--      주문 네비-->
+        <nav id="order-nav">
+            <a href="/admin/order?orderStatus=ready" class="btn">처리 대기</a>
+            <a href="/admin/order?orderStatus=complete" class="btn">처리 완료</a>
+            <a href="/admin/order?orderStatus=cancel" class="btn">처리 취소</a>
+        </nav>
+
+        <div class="row justify-content-center" id="item-container">
+            <!--주문 있을 때-->
+            <th:block th:if="${not #strings.isEmpty(order)}">
+
+                <div class="order-item col-sm-10 border text-start mt-3 mb-5 p-3 bg-white" style="border-radius:3.5rem;">
+                    <div class="d-flex justify-content-between mx-5">
+                        <div>주문번호 : <ins>[[${order.orderId}]]</ins></div>
+                        <div>주문일시 : <ins>[[${order.orderDate}]]</ins></div>
+                    </div>
+
+                    <div class="mx-5">
+                        <div>주소 : <ins>[[${order.address}]]([[${order.addressDetail}]])</ins></div>
+                        <div>받는분성함 : <ins>[[${order.receiverName}]]</ins></div>
+                    </div>
+                    <div class="d-flex mx-5 mb-4 justify-content-end">
+                        <div>주문상태 : <ins>[[${order.orderStatus}]]</ins></div>
+                    </div>
+                    <div class="row text-center" >
+                        <div class="col-sm-4">상품코드</div>
+                        <div class="col-sm-4">상품명</div>
+                        <div class="col-sm-4">상품갯수</div>
+                    </div>
+                    <hr>
+                    <div class="row text-center mb-4" th:each="item : ${order.orderItemDtos}" th:if="${not #strings.isEmpty(order.orderItemDtos)}">
+                        <div class="col-sm-4"><a th:href="@{|/product/detail/${item.productId}|}">[[${item.productId}]]</a></div>
+                        <div class="col-sm-4"><a th:href="@{|/product/detail/${item.productId}|}">[[${item.productName}]]</a></div>
+                        <div class="col-sm-4">[[${item.itemCount}]]</div>
+                    </div>
+                    <hr>
+                    <div class="d-flex mx-5 mb-4 justify-content-end">
+                        <div>총 금액 :[[${order.totalPrice}]]</div>
+                    </div>
+                    <div class="d-flex mx-5 mb-4 justify-content-end">
+                        <form th:action="@{/admin/order/process}" method="post">
+                            <sec:csrfInput class="d-flex mb-4 justify-content-end"/>
+                            <input type="hidden" th:value="${order.orderId}" name="orderId" />
+                            <input type="hidden" value="complete" name="orderStatus" />
+                            <div><button type="submit" class="btn btn-primary">주문 처리</button></div>
+                        </form>
+
+                        <form th:action="@{/admin/order/process}" method="post">
+                            <sec:csrfInput />
+                            <input type="hidden" th:value="${order.orderId}" name="orderId" />
+                            <input type="hidden" value="cancel" name="orderStatus" />
+                            <div><button type="submit" class="btn btn-danger ms-1">주문취소 처리</button></div>
+                        </form>
+                    </div>
+                </div>
+
+            </th:block>
+            <!--주문 없을 때-->
+            <th:block th:unless="${not #strings.isEmpty(order)}">
+                <div class="order-item col-sm-10 border rounded text-start mt-3 mb-5 bg-white">
+                    <div class="row align-items-center">
+                        <h1>주문이 없습니다.</h1>
+                    </div>
+                </div>
+            </th:block>
+
+
+        </div>
+
+
+    </div>
+  </section>
+
+</body>
+</html>

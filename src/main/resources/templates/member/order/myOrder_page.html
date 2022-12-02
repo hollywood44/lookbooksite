@@ -56,7 +56,32 @@
                 </div>
             </div>
             </th:block>
-<!--주문 없을 때-->
+            <th:block th:if="${not #strings.isEmpty(paging)}">
+                <nav aria-label="Page navigation" id="board-pagenation">
+                    <ul class="pagination justify-content-center"
+                        th:with="start=${(paging.number/maxPage)*maxPage + 1}, end=(${(paging.totalPages == 0) ? 1 : (start + (maxPage - 1) < paging.totalPages ? start + (maxPage - 1) : paging.totalPages)})"
+                    >
+
+                        <li class="page-item" th:if="${start > 1}">
+                            <a class="page-link" th:href="@{|?page=${paging.number}|}">Prev</a>
+                        </li>
+
+                        <li class="page-item"
+                            th:each="page: ${#numbers.sequence(start, end)}">
+                            <a class="page-link"
+                               th:text="${page}"
+                               th:href="@{|?page=${page}|}">1</a>
+                        </li>
+
+                        <li class="page-item" th:if="${end < paging.totalPages}">
+                            <a class="page-link" th:href="@{|?page=${paging.number+2}|}">Next</a>
+                        </li>
+
+                    </ul>
+                </nav>
+            </th:block>
+
+            <!--주문 없을 때-->
             <th:block th:unless="${not #strings.isEmpty(paging)}">
                 <div class="order-item col-sm-10 border rounded text-start mt-3 mb-5 bg-white">
                     <div class="row align-items-center">

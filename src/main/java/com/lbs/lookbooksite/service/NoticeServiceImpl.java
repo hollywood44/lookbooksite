@@ -3,6 +3,7 @@ package com.lbs.lookbooksite.service;
 import com.lbs.lookbooksite.domain.Board;
 import com.lbs.lookbooksite.domain.Member;
 import com.lbs.lookbooksite.domain.Notice;
+import com.lbs.lookbooksite.domain.Order;
 import com.lbs.lookbooksite.dto.NoticeDto;
 import com.lbs.lookbooksite.repository.BoardRepository;
 import com.lbs.lookbooksite.repository.NoticeRepository;
@@ -33,11 +34,26 @@ public class NoticeServiceImpl implements NoticeService{
 
         String sendNotice = boardId + "번 게시글에 댓글이 달렸습니다.";
 
-        Notice notice = Notice.builder()
-                .notice(sendNotice)
-                .targetMember(targetBoard.getWriter())
-                .sendMember(member)
-                .build();
+        Notice notice = makeNotice(targetBoard.getWriter(), member, sendNotice);
+
+        noticeRepository.save(notice);
+    }
+
+    @Override
+    public void sendOrderNotice(Member targetMember,String orderId ,Order.OrderStatus orderStatus) {
+        String status = "";
+        Member admin = Member.builder().memberId("admin").build();
+
+        switch (orderStatus) {
+            case Complete:
+                status = orderId + "주문이 정상적으로 처리 되었습니다.";
+                break;
+            case Cancel:
+                status = orderId + "주문이 취소되었습니다.";
+                break;
+        }
+
+        Notice notice = makeNotice(targetMember, admin, status);
 
         noticeRepository.save(notice);
     }

@@ -77,13 +77,27 @@ public interface OrderService {
                 .orderDate(orderD)
                 .orderItemDtos(dtoItemList)
                 .build();
-        System.out.println(dto);
+
         return dto;
     }
 
 
+    // 주문하기
     String putOrder(OrderDto dto, Member member);
+    // 주문목록 보기
     Page<OrderDto> getMyOrder(Member loginedMember, int page);
+    // 주문상태 변경하기
     String orderStatusChange();
+
+    //<editor-fold desc="admin">
+
+    // 해당 주문 정보 리턴
+    Page<OrderDto> getAllOrderCaseByStatus(String orderStatus,int page);
+    OrderDto getForProcessingOrder(String orderId);
+    // 해당 주문 주문 완료로 변경
+    String orderCompleteForAdmin(String orderId);
+    // 해당 주문 주문 취소로 변경
+    String orderCancelForAdmin(String orderId);
+    //</editor-fold>
 
 }

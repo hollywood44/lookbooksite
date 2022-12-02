@@ -56,7 +56,7 @@ public class Product extends BaseTimeEntity {
 
     // 재고 변경
     public void changeStock(int stockC){
-        this.stock = this.stock-stockC;
+        this.stock = stock-stockC;
     }
 
 

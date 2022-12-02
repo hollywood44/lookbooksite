@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/adminLayout}"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+  <meta charset="UTF-8">
+  <title>주문 처리 페이지</title>
+</head>
+<body>
+
+  <section layout:fragment="content">
+    <div class="border" style="background-color:white;min-height:80vh;">
+<!--      주문 네비-->
+      <nav id="order-nav">
+        <a href="?orderStatus=ready" class="btn">처리 대기</a>
+        <a href="?orderStatus=complete" class="btn">처리 완료</a>
+        <a href="?orderStatus=cancel" class="btn">처리 취소</a>
+      </nav>
+
+      <div class="row mt-5 mx-3 text-center border-bottom">
+        <div class="col-sm-3">주문번호</div>
+        <div class="col-sm-3">주문자</div>
+        <div class="col-sm-3">상태</div>
+        <div class="col-sm-3">처리</div>
+      </div>
+
+      <div class="row mt-5 mx-3 text-center">
+        <th:block th:each="order : ${orderList}">
+            <div class="col-sm-3">[[${order.orderId}]]</div>
+            <div class="col-sm-3">[[${order.memberId}]]</div>
+            <div class="col-sm-3" th:if="${#strings.equals(order.orderStatus,'Ready')}">처리 대기</div>
+            <div class="col-sm-3" th:if="${#strings.equals(order.orderStatus,'Cancel')}">취소 처리</div>
+            <div class="col-sm-3" th:if="${#strings.equals(order.orderStatus,'Complete')}">처리 완료</div>
+            <div class="col-sm-3 mb-1"><a th:href="@{|/admin/order/processing?orderId=${order.orderId}|}">처리페이지</a></div>
+        </th:block>
+      </div>
+    </div>
+      <!--        페이징-->
+      <th:block th:if="${not #strings.isEmpty(orderList)}">
+          <nav aria-label="Page navigation" id="board-pagenation">
+              <ul class="pagination justify-content-center"
+                  th:with="start=${(orderList.number/maxPage)*maxPage + 1}, end=(${(orderList.totalPages == 0) ? 1 : (start + (maxPage - 1) < orderList.totalPages ? start + (maxPage - 1) : orderList.totalPages)})"
+              >
+
+                  <li class="page-item" th:if="${start > 1}">
+                      <a class="page-link" th:href="@{|?page=${orderList.number}|}">Prev</a>
+                  </li>
+
+                  <li class="page-item"
+                      th:each="page: ${#numbers.sequence(start, end)}">
+                      <a class="page-link"
+                         th:text="${page}"
+                         th:href="@{|?page=${page}|}">1</a>
+                  </li>
+
+                  <li class="page-item" th:if="${end < orderList.totalPages}">
+                      <a class="page-link" th:href="@{|?page=${orderList.number+2}|}">Next</a>
+                  </li>
+
+              </ul>
+          </nav>
+      </th:block>
+  </section>
+
+</body>
+</html>

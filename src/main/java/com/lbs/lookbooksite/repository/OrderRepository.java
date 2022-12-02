@@ -9,4 +9,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface OrderRepository extends JpaRepository<Order,String> {
 
     Page<Order> findByMemberId(Member loginedMember, Pageable pageable);
+
+    Page<Order> findByOrderStatus(Order.OrderStatus orderStatus, Pageable pageable);
 }
