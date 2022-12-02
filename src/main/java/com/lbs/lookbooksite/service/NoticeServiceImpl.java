@@ -7,12 +7,17 @@ import com.lbs.lookbooksite.dto.NoticeDto;
 import com.lbs.lookbooksite.repository.BoardRepository;
 import com.lbs.lookbooksite.repository.NoticeRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 @Service
 @RequiredArgsConstructor
@@ -80,5 +85,22 @@ public class NoticeServiceImpl implements NoticeService{
             }
         }
         return sendNotice;
+    }
+
+    @Override
+    public Page<NoticeDto> getPrevNotice(Member member,int page) {
+        Function<Notice,NoticeDto> fn = (entity-> NoticeDto.builder().
+                noticeId(entity.getNoticeId()).notice(entity.getNotice()).build());
+        Page<NoticeDto> sendPrevNotice = Page.empty();
+
+        Sort sort = Sort.by("readDate").descending();
+        Pageable pageable = PageRequest.of(page, 20, sort);
+
+        Page<Notice> entityPrevNoticeList = noticeRepository.findByTargetMemberAndReadDateIsNotNull(member, pageable);
+        if (!entityPrevNoticeList.isEmpty()) {
+            sendPrevNotice = entityPrevNoticeList.map(fn);
+            }
+
+        return sendPrevNotice;
     }
 }

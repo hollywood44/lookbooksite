@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/baseLayout}"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta charset="UTF-8">
+    <title>알림 페이지</title>
+</head>
+<body>
+<th:block layout:fragment="content">
+
+    <section style="flex:1;background-color:#F2F2F2;" id="main-section">
+        <div class="container" id="notice-container">
+            <div class="row justify-content-center mt-5">
+                <div class="col-sm-7 border p-3" style="min-height:50vh;border-radius:1.5rem;background-color:white;">
+                    <h2 class="text-center">이전 알림 목록</h2>
+                    <th:block th:if="${not #strings.isEmpty(prevNotice)}">
+                        <div th:each="noti : ${prevNotice}" class="text-center">[[${noti.notice}]]</div>
+                    </th:block>
+                    <th:block th:unless="${#strings.isEmpty(prevNotice)}">
+                        <div class="text-center">이전 알림이 없습니다.</div>
+                    </th:block>
+            </div>
+                <!--페이징-->
+                <th:block th:if="${not #strings.isEmpty(prevNotice)}">
+                    <nav aria-label="Page navigation" id="board-pagenation">
+                        <ul class="pagination justify-content-center"
+                            th:with="start=${(prevNotice.number/maxPage)*maxPage + 1}, end=(${(prevNotice.totalPages == 0) ? 1 : (start + (maxPage - 1) < prevNotice.totalPages ? start + (maxPage - 1) : prevNotice.totalPages)})"
+                        >
+
+                            <li class="page-item" th:if="${start > 1}">
+                                <a class="page-link" th:href="@{|?page=${prevNotice.number}|}">Prev</a>
+                            </li>
+
+                            <li class="page-item"
+                                th:each="page: ${#numbers.sequence(start, end)}">
+                                <a class="page-link"
+                                   th:text="${page}"
+                                   th:href="@{|?page=${page}|}">1</a>
+                            </li>
+
+                            <li class="page-item" th:if="${end < prevNotice.totalPages}">
+                                <a class="page-link" th:href="@{|?page=${prevNotice.number+2}|}">Next</a>
+                            </li>
+
+                        </ul>
+                    </nav>
+                </th:block>
+
+        </div>
+      </section>
+
+</th:block>
+</body>
+</html>

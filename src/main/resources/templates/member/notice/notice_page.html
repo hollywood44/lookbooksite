@@ -22,8 +22,8 @@
 
                     <h2 class="text-center">읽은 알림 목록</h2>
                     <th:block th:if="${not #strings.isEmpty(readNotice)}" th:each="noti ,i: ${readNotice}">
-                        <div class="text-center" th:if="${i.index<15}">[[${noti.notice}]]</div>
-                        <div class="text-center" th:unless="${i.index<15}">...이전 알림</div>
+                        <div class="text-center" th:if="${i.index<20}">[[${noti.notice}]]</div>
+                        <div class="text-center" th:unless="${i.index<20}"><a href="/notice/previousNotice">...이전 알림</a></div>
                     </th:block>
                 </div>
             </div>
