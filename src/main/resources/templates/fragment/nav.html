@@ -30,10 +30,27 @@
         </th:block>
 
         <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-2">
-          <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
+          <li class="nav-item dropdown" sec:authorize="isAuthenticated()" th:with="isAdmin = ${#authentication.name}">
+<!--            관리자라면 활성화-->
+            <a class="nav-link dropdown-toggle" id="navbarDropdownAdmin" href="#" role="button" data-bs-toggle="dropdown"
+               aria-expanded="false" th:if="${#strings.equals(isAdmin,'admin')}" th:text="${#authentication.name}" >Admin</a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdownAdmin">
+              <li><a class="dropdown-item" href="/admin">관리자 메인 페이지</a></li>
+              <li><a class="dropdown-item" href="/admin">회원 관리 페이지</a></li>
+              <li><a class="dropdown-item" href="/admin/order">주문 관리 페이지</a></li>
+              <li><a class="dropdown-item" href="/admin/product">상품 관리 페이지</a></li>
+              <li><a class="dropdown-item" href="/admin/lookbook">룩북 관리 페이지</a></li>
+              <li><a class="dropdown-item" href="/admin/style-tag">스타일태그 관리 페이지</a></li>
+              <li><a class="dropdown-item" href="/admin/board">게시판 관리 페이지</a></li>
+
+              <li><hr class="dropdown-divider" /></li>
+              <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#signOutModal" href="#">SignOut</a></li>
+            </ul>
+
+
             <!-- 로그인되있다면 활성화 -->
             <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
-              aria-expanded="false" th:text="${#authentication.name}" >My_ID_Here</a>
+              aria-expanded="false" th:text="${#authentication.name}" th:if="${not #strings.equals(isAdmin,'admin')}">My_ID_Here</a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
               <li><a class="dropdown-item" href="/cart/my-cart"><i class="bi bi-cart"></i> Cart</a></li>
               <li><a class="dropdown-item" href="/order/myOrder"><i class="bi bi-wallet"></i> Order</a></li>

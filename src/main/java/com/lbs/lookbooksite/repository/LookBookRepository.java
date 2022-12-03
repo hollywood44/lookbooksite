@@ -8,5 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface LookBookRepository extends JpaRepository<LookBook,Long> {
 
     Page<LookBook> findByStyleTagContains(String styleTag,Pageable pageable);
+
+    Page<LookBook> findByStyleTag(String styleTag, Pageable pageable);
     Page<LookBook> findAll(Pageable pageable);
 }

@@ -1,8 +1,10 @@
 package com.lbs.lookbooksite.controller;
 
 import com.lbs.lookbooksite.configs.FileManager;
+import com.lbs.lookbooksite.dto.lookbook.LookbookDto;
 import com.lbs.lookbooksite.dto.order.OrderDto;
 import com.lbs.lookbooksite.dto.styleTag.StyleTagDto;
+import com.lbs.lookbooksite.service.LookBookService;
 import com.lbs.lookbooksite.service.OrderService;
 import com.lbs.lookbooksite.service.StyleTagService;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.validation.Valid;
 import java.io.File;
 import java.nio.file.Files;
+import java.util.List;
+import java.util.Map;
 
 @RequestMapping("/admin")
 @Controller
@@ -27,7 +31,7 @@ import java.nio.file.Files;
 public class AdminController {
 
     private final OrderService orderService;
-
+    private final LookBookService lookBookService;
     private final StyleTagService styleTagService;
     private final FileManager fileManager;
 
@@ -69,10 +73,19 @@ public class AdminController {
     }
 
     @GetMapping("/lookbook")
-    public String lookbookManagePage() {
+    public String lookbookManagePage(Model model,
+                                     @RequestParam(value = "styleTag", defaultValue = "all") String styleTag,
+                                     @RequestParam(value="page",defaultValue = "0") int page) {
+        Page<LookbookDto> allLookbook = lookBookService.getAllLookbook(styleTag,page);
+        Map<String,String> allTag = styleTagService.getAllStyleTags().getStyleTag();
+
+        model.addAttribute("allTag", allTag);
+        model.addAttribute("allLookbook", allLookbook);
 
         return "/admin/lookbook/lookbookManage_page";
     }
+
+
 
     @PostMapping("/style-tag")
     public String addStyleTag(StyleTagDto tag, RedirectAttributes redirectAttributes) {

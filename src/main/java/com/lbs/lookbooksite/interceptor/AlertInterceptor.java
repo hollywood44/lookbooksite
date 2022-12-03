@@ -26,6 +26,7 @@ public class AlertInterceptor implements HandlerInterceptor {
     @Autowired
     private NoticeService noticeService;
 
+
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
 

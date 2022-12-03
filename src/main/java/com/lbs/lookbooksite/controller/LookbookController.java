@@ -3,6 +3,7 @@ package com.lbs.lookbooksite.controller;
 import com.lbs.lookbooksite.dto.lookbook.LookbookDto;
 import com.lbs.lookbooksite.dto.product.ProductDto;
 import com.lbs.lookbooksite.service.LookBookService;
+import com.lbs.lookbooksite.service.StyleTagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -16,6 +17,7 @@ import javax.validation.Valid;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/lookbook")
@@ -23,12 +25,17 @@ import java.util.List;
 public class LookbookController {
 
     private final LookBookService lookBookService;
+    private final StyleTagService styleTagService;
 
     @GetMapping("/home")
     public String lookbookHomePage(Model model,
                                    @RequestParam(value = "styleTag", defaultValue = "all") String styleTag,
                                    @RequestParam(value="page",defaultValue = "0") int page) {
+
         Page<LookbookDto> allLookbook = lookBookService.getAllLookbook(styleTag,page);
+        Map<String,String> allTag = styleTagService.getAllStyleTags().getStyleTag();
+
+        model.addAttribute("allTag", allTag);
         model.addAttribute("allLookbook", allLookbook);
         return "/member/lookbook/lookbookHome_page";
     }
