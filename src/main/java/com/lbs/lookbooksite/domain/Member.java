@@ -70,12 +70,12 @@ public class Member extends BaseTimeEntity implements UserDetails {
 
     @Builder.Default
     @ToString.Exclude
-    @OneToMany(mappedBy = "orderId", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "memberId", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)
     private List<Order> myOrderList = new ArrayList<>();
 
     @Builder.Default
     @ToString.Exclude
-    @OneToMany(mappedBy = "noticeId", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "sendMember", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)
     private List<Notice> myNoticeList = new ArrayList<>();
 
     @Builder.Default

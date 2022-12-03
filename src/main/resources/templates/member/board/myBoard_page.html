@@ -15,11 +15,12 @@
     <div class="container mb-5" style="margin-top:20%;">
 <!--titles-->
         <div class="row mt-2 mb-4 justify-content-center text-center">
-            <div class="col-1">게시글번호</div>
-            <div class="col-6">제목</div>
+            <div class="col-1">번호</div>
+            <div class="col-5">제목</div>
             <div class="col-2">글쓴이</div>
             <div class="col-1">좋아요</div>
             <div class="col-1">조회수</div>
+            <div class="col-1">수정</div>
             <hr class="dropdown-divider" style="width: 90%;" />
         </div>
 
@@ -27,10 +28,11 @@
         <th:block th:if="${not #strings.isEmpty(paging)}">
             <div th:each="board : ${paging}" class="row mt-3 mb-3 justify-content-center text-center">
                 <div class="col-1" th:text="${board.boardId}">num</div>
-                <div class="col-6"><a th:text="${board.title}" th:href="@{|/board/detail/${board.boardId}|}">제목</a></div>
+                <div class="col-5"><a th:text="${board.title}" th:href="@{|/board/detail/${board.boardId}|}">제목</a></div>
                 <div class="col-2" th:text="${board.writer}">writer</div>
                 <div class="col-1" th:text="${board.likeCount}">likeC</div>
                 <div class="col-1" th:text="${board.viewCount}">viewC</div>
+                <div class="col-1"><a th:href="@{|/board/modify/${board.boardId}|}">수정</a></div>
             </div>
         </th:block>
 

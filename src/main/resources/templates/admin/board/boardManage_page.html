@@ -41,7 +41,7 @@
               <hr class="dropdown-divider" style="width: 100%;" />
           </div>
           <th:block th:if="${not #strings.isEmpty(paging)}">
-              <div th:each="board : ${paging}" class="row mt-3 mb-3 justify-content-center text-center" th:style="${board.reportCount >= 3} ? 'background-color:red;'">
+              <div th:each="board : ${paging}" class="row mt-3 mb-3 justify-content-center text-center" th:style="${board.reportCount >= 2} ? 'background-color:red;'">
                   <div class="col-1" th:text="${board.boardId}">num</div>
                   <div class="col-4"><a th:text="${board.title}" th:href="@{|/board/detail/${board.boardId}|}">제목</a></div>
                   <div class="col-2" th:text="${board.writer}">writer</div>

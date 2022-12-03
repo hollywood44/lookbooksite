@@ -55,7 +55,7 @@ public class MemberController {
 
     @GetMapping("/denied")
     public String deniedPage(){
-        return "deniedPage";
+        return "denied_page";
     }
 
     @GetMapping("/my-info")

@@ -20,7 +20,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     // 인증을 무시할 경로 지정
     @Override
     public void configure(WebSecurity webSecurity) {
-        webSecurity.ignoring().antMatchers("/css/**","/js/***","/assets/**");
+        webSecurity.ignoring().antMatchers("/css/**","/js/***","/assets/**"
+        ,"/boardImg/**", "/productImg/**","/lookBookImg/**","/styleTagImg/**","/member/denied","/error");
     }
 
     // http 관련 인증 설정
@@ -28,9 +29,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception{
         http
                 .authorizeRequests() // 접근 관련 인증설정
-                .antMatchers("/**","/product/**","/product/upload","/board/**","member/**","/cart/**","/order/**","/admin/**").permitAll()
-                .antMatchers("/product/**","/board/**","/member/**","/cart/**" , "/order/**").hasRole("MEMBER")
-                .antMatchers().hasRole("ADMIN")
+                .antMatchers("/member/main","/member/signIn","/member/signUp",
+                        "/lookbook/home","/lookbook/detail/**",
+                        "/product/list","/product/detail/**",
+                        "/board/list","/board/detail/**","/board/search/**"
+                ).permitAll()
+                .antMatchers("/admin/**",
+                        "/product/upload","/product/modify/**",
+                        "/lookbook/post","/lookbook/delete-img","/lookbook/modify/**"
+                ).hasRole("ADMIN")
+                .antMatchers("/member/**","/notice/**","/order/**","/cart/**","/board/**").hasRole("MEMBER")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
@@ -44,7 +52,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .invalidateHttpSession(true)
                 .and()
                 .exceptionHandling()
-                .accessDeniedPage("/denied") // 권한 없는 대상 접근시도 시 이동할 페이지
+                .accessDeniedPage("/member/denied") // 권한 없는 대상 접근시도 시 이동할 페이지
         ;
     }
 

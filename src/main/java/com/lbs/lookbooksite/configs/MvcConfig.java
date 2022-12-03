@@ -33,8 +33,9 @@ public class MvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(alertInterceptor())
                 .addPathPatterns("/**") // 해당 경로에 접근하기 전에 인터셉터가 가로챔
-                .excludePathPatterns("/css/**", "/js/**", "/assets/**", "/notice/**") // 해당 경로는 인터셉터가 가로치지 않는다.
-                .excludePathPatterns("/admin", "/admin/**");
+                .excludePathPatterns("/css/**", "/js/**", "/assets/**", "/notice/**","/boardImg/**",
+                        "/productImg/**","/lookBookImg/**","/styleTagImg/**") // 해당 경로는 인터셉터가 가로치지 않는다.
+                .excludePathPatterns("/admin", "/admin/**","/member/signIn");
 
     }
 

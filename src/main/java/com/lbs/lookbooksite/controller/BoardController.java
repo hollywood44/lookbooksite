@@ -57,12 +57,18 @@ public class BoardController {
 
     // 게시글 수정 페이지
     @GetMapping("/modify/{boardId}")
-    public String boardModifyPage(Model model,@PathVariable("boardId") Long boardId) {
+    public String boardModifyPage(Model model,@PathVariable("boardId") Long boardId,@AuthenticationPrincipal Member loginedMember) {
         BoardDto board = boardService.getBoardAsModify(boardId);
-        board.setContent(board.getContent().replace("<br>","\n"));
-        model.addAttribute("boardDto", board);
 
-        return "member/board/boardModify_page";
+        if (board.getWriter().equals(loginedMember.getMemberId())) {
+            board.setContent(board.getContent().replace("<br>", "\n"));
+            model.addAttribute("boardDto", board);
+
+            return "member/board/boardModify_page";
+        } else {
+            return "redirect:/board/list";
+        }
+
     }
 
     // 게시글 이미지 삭제
