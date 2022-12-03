@@ -51,7 +51,7 @@ public class LookbookController {
 
     @GetMapping("/post")
     public String lookbookPostPage(LookbookDto lookbookDto) {
-        return "/member/lookbook/lookbookPost_page";
+        return "/admin/lookbook/lookbookPost_page";
     }
 
     @GetMapping("/modify/{lookbookId}")
@@ -60,7 +60,7 @@ public class LookbookController {
         lookbookDto.setDescription(lookbookDto.getDescription().replace("<br>","\n"));
         model.addAttribute("lookbookDto",lookbookDto);
 
-        return "/member/lookbook/lookbookModify_page";
+        return "/admin/lookbook/lookbookModify_page";
     }
 
     @GetMapping("/delete-img")
@@ -74,7 +74,7 @@ public class LookbookController {
     @PostMapping("/post")
     public String lookbookPosting(@Valid LookbookDto lookbookDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "/member/lookbook/lookbookPost_page";
+            return "/admin/lookbook/lookbookPost_page";
         }
 
         // 들어온 파일이 이미지가 아니거나, 비어있을 경우 체크
@@ -96,7 +96,7 @@ public class LookbookController {
         lookbookDto.setDescription(lookbookDto.getDescription().replace("\n","<br>"));
 
         if (checkFileIsNull == 0) {
-            return "/member/lookbook/lookbookPost_page";
+            return "/admin/lookbook/lookbookPost_page";
         } else {
             lookBookService.postingWithImg(lookbookDto);
         }

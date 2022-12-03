@@ -92,7 +92,18 @@
 
         </div>
     </div>
+    <script th:inline="javascript">
 
+    /*<![CDATA[*/
+
+    var orderSuccessMsg = [[${orderSuccessMsg}]];
+    if(orderSuccessMsg != null){
+    alert(orderSuccessMsg);
+    }
+
+    /*]]>*/
+
+</script>
 </section>
 </th:block>
 

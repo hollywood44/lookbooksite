@@ -49,10 +49,6 @@ public class OrderController {
         return "member/order/myOrder_page";
     }
 
-    @GetMapping("/orderSuccess")
-    public String orderSuccessPage() {
-        return "/member/order/orderSuccess_page";
-    }
 
     @PostMapping("/proceeding-cart")
     public String proceedingPage(OrderProceeding orderProceeding, RedirectAttributes re, @AuthenticationPrincipal Member member) {
@@ -63,11 +59,13 @@ public class OrderController {
     }
 
     @PostMapping("/putOrder")
-    public String putOrder(OrderDto orderDto,@AuthenticationPrincipal Member member) {
+    public String putOrder(OrderDto orderDto,@AuthenticationPrincipal Member member,RedirectAttributes redirectAttributes) {
 
-        orderService.putOrder(orderDto,member);
-
-        return "redirect:/order/orderSuccess";
+        String status = orderService.putOrder(orderDto,member);
+        if (status != null) {
+            redirectAttributes.addFlashAttribute("orderSuccessMsg", "주문이 정상적으로 완료되었습니다.");
+        }
+        return "redirect:/order/myOrder";
     }
 
 

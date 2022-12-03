@@ -131,6 +131,8 @@ public interface BoardService {
     // 게시글 불러오기 관련
     Page<BoardDto> getAllBoardList(int page);
 
+    Page<BoardDto> getSearchedBoardList(String condition,String keyword,int page);
+
     Page<BoardDto> getMyBoardList(int page,Member loginedMember);
     BoardDto getBoard(Long boardId);
     BoardDto getBoardAsModify(Long boardId);

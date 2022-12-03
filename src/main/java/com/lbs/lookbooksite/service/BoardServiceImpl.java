@@ -196,6 +196,16 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
+    public Page<BoardDto> getSearchedBoardList(String condition,String keyword,int page) {
+        Function<Board, BoardDto> fn = (entity -> (entityToDtoNoneDetail(entity)));
+        Pageable pageable = PageRequest.of(page,10);
+        Page<Board> entityList = boardRepository.search(keyword, condition, pageable);
+        Page<BoardDto> boardList = entityList.map(fn);
+
+        return boardList;
+    }
+
+    @Override
     public Page<BoardDto> getMyBoardList(int page,Member loginedMember) {
         Function<Board, BoardDto> fn = (entity -> (entityToDtoNoneDetail(entity)));
         Sort sort = Sort.by("boardId").descending();

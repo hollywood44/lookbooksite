@@ -93,6 +93,22 @@ public class BoardController {
         return "member/board/boardPost_page";
     }
 
+    @GetMapping("/search")
+    public String searchBoard(@RequestParam("condition")String condition,@RequestParam("keyword")String keyword,@RequestParam(value = "page",defaultValue = "1")int page,Model model) {
+        page = page - 1;
+
+        if (condition.isEmpty() && keyword.isEmpty()) {
+            return "redirect:/board/list";
+        } else {
+            Page<BoardDto> paging = boardService.getAllBoardList(page);
+
+            model.addAttribute("paging", paging);
+            model.addAttribute("maxPage",10);
+
+            return "member/board/boardList_page";
+        }
+    }
+
     //</editor-fold>
 
     //<editor-fold desc="POST">

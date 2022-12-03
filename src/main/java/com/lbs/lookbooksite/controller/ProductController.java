@@ -46,7 +46,7 @@ public class ProductController {
     // 업로드 페이지
     @GetMapping("/upload")
     public String postPage(ProductDto productDto) {
-        return "/member/product/productPost_page";
+        return "/admin/product/productPost_page";
     }
 
     // 수정 페이지
@@ -56,14 +56,14 @@ public class ProductController {
         productDto.setDescription(productDto.getDescription().replace("<br>","\n"));
         model.addAttribute("productDto",productDto);
 
-        return "member/product/productModify_page";
+        return "admin/product/productModify_page";
     }
 
     // 상품 업로드
     @PostMapping("/upload")
     public String upload(@Valid ProductDto productDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "member/product/productPost_page";
+            return "admin/product/productPost_page";
         }
 
         // 들어온 파일이 이미지가 아니거나, 비어있을 경우 체크
