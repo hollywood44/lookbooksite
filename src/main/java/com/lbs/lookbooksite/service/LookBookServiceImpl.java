@@ -37,6 +37,7 @@ public class LookBookServiceImpl implements LookBookService {
 
     private final LookBookRepository lookBookRepository;
     private final LookBook_ImageRepository imageRepository;
+    private final NoticeService noticeService;
     private final FileManager fileManager;
 
     //<editor-fold desc="포스팅관련">
@@ -95,6 +96,7 @@ public class LookBookServiceImpl implements LookBookService {
                 // 영속성 전이
                 postingLB.addImgs(lookBook_image);
             }
+            noticeService.sendLookbookUpdateNotice(dto.getStyleTag());
             //DB에 저장
             return lookBookRepository.save(postingLB).getLookbookId();
 

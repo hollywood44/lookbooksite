@@ -11,11 +11,65 @@
 <body>
 
   <section layout:fragment="content">
-    <div class="border">
-      <h2>상품 관리</h2>
+    <div class="border bg-white" style="min-height:90vh;">
+      <div class="d-flex justify-content-between align-items-center">
+        <h2 class="ms-5 mt-3">상품 관리</h2>
+        <a class="btn btn-primary me-5" style="height:70%;" href="/product/upload">상품 등록</a>
+      </div>
 
+      <div class="container px-4 px-lg-5 mt-5" style="min-height: 70vh;">
+        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+          <!--일반 상품-->
+          <div class="col mb-5" th:each="product : ${allProduct}">
+            <div class="card h-100">
+              <!-- Product image-->
+              <th:block th:if="${not #strings.isEmpty(product.returnImages)}">
+                <img th:src="${product.returnImages[0].storedPath}" alt="#" class="card-img-top" style="height: 169px;">
+              </th:block>
+              <!-- Product details-->
+              <div class="card-body p-4">
+                <h5 class="fw-bolder text-center" th:text="${product.productName}">상품명</h5>
+                <div class="text-center" th:text="${product.price}">
+                  <!-- Product name-->
+                  <!-- Product price-->
+                  가격
+                </div>
+              </div>
+              <!-- Product actions-->
+              <div class="card-footer p-4 pt-0 border-top-0 bg-transparent d-flex justify-content-center">
+                <div class="text-center me-1"><a class="btn btn-outline-dark mt-auto" th:href="@{|/product/detail/${product.productId}|}">상세보기</a></div>
+                <div class="text-center"><a class="btn btn-outline-dark mt-auto" th:href="@{|/product/modify/${product.productId}|}">수정</a></div>
+              </div>
+            </div>
+          </div>
 
+        </div>
+      </div>
+      <!--        페이징-->
+      <th:block th:if="${not #strings.isEmpty(allProduct)}">
+        <nav aria-label="Page navigation" id="board-pagenation">
+          <ul class="pagination justify-content-center"
+              th:with="start=${(allProduct.number/maxPage)*maxPage + 1}, end=(${(allProduct.totalPages == 0) ? 1 : (start + (maxPage - 1) < allProduct.totalPages ? start + (maxPage - 1) : allProduct.totalPages)})"
+          >
 
+            <li class="page-item" th:if="${start > 1}">
+              <a class="page-link" th:href="@{|?page=${allProduct.number}|}">Prev</a>
+            </li>
+
+            <li class="page-item"
+                th:each="page: ${#numbers.sequence(start, end)}">
+              <a class="page-link"
+                 th:text="${page}"
+                 th:href="@{|?page=${page}|}">1</a>
+            </li>
+
+            <li class="page-item" th:if="${end < allProduct.totalPages}">
+              <a class="page-link" th:href="@{|?page=${allProduct.number+2}|}">Next</a>
+            </li>
+
+          </ul>
+        </nav>
+      </th:block>
     </div>
   </section>
 

@@ -21,6 +21,8 @@ public interface NoticeService {
 
     void sendCommentNotice(Long boardId,Member member);
     void sendOrderNotice(Member targetMember,String orderId ,Order.OrderStatus orderStatus);
+
+    void sendLookbookUpdateNotice(String styleTag);
     List<NoticeDto> readNotice(Member member);
 
     Long checkNoti(Member member);

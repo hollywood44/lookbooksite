@@ -4,6 +4,7 @@ import com.lbs.lookbooksite.domain.Product;
 import com.lbs.lookbooksite.domain.Product_Image;
 import com.lbs.lookbooksite.dto.product.ProductDto;
 import com.lbs.lookbooksite.dto.product.Product_ImageDto;
+import org.springframework.data.domain.Page;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +53,7 @@ public interface ProductService {
     String uploadProductWithImg(ProductDto dto);
     String uploadProductWithOutImg(ProductDto dto);
 
-    List<ProductDto> getAllProductList();
+    Page<ProductDto> getAllProductList(int page);
 
     ProductDto getProduct(String productId);
 

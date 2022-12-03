@@ -1,12 +1,12 @@
 package com.lbs.lookbooksite.controller;
 
 import com.lbs.lookbooksite.configs.FileManager;
+import com.lbs.lookbooksite.dto.board.BoardDto;
 import com.lbs.lookbooksite.dto.lookbook.LookbookDto;
 import com.lbs.lookbooksite.dto.order.OrderDto;
+import com.lbs.lookbooksite.dto.product.ProductDto;
 import com.lbs.lookbooksite.dto.styleTag.StyleTagDto;
-import com.lbs.lookbooksite.service.LookBookService;
-import com.lbs.lookbooksite.service.OrderService;
-import com.lbs.lookbooksite.service.StyleTagService;
+import com.lbs.lookbooksite.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -33,6 +33,8 @@ public class AdminController {
     private final OrderService orderService;
     private final LookBookService lookBookService;
     private final StyleTagService styleTagService;
+    private final ProductService productService;
+    private final BoardService boardService;
     private final FileManager fileManager;
 
     @GetMapping
@@ -47,45 +49,6 @@ public class AdminController {
 
         return "/admin/tag/styleTagManage_page";
     }
-
-    @GetMapping("/product")
-    public String productManagePage() {
-
-        return "/admin/product/productManage_page";
-    }
-
-    @GetMapping("/order")
-    public String orderManagePage(Model model,@RequestParam(value = "orderStatus", defaultValue = "ready")String orderStatus,@RequestParam(value = "page",defaultValue = "1")int page) {
-        page = page-1;
-
-        Page<OrderDto> orderList = orderService.getAllOrderCaseByStatus(orderStatus, page);
-        model.addAttribute("orderList", orderList);
-        model.addAttribute("maxPage",10);
-
-        return "/admin/order/orderManage_page";
-    }
-
-    @GetMapping("/order/processing")
-    public String orderProcessingPage(Model model, @RequestParam("orderId")String orderId) {
-        OrderDto order = orderService.getForProcessingOrder(orderId);
-        model.addAttribute("order", order);
-        return "/admin/order/orderProcessing_page";
-    }
-
-    @GetMapping("/lookbook")
-    public String lookbookManagePage(Model model,
-                                     @RequestParam(value = "styleTag", defaultValue = "all") String styleTag,
-                                     @RequestParam(value="page",defaultValue = "0") int page) {
-        Page<LookbookDto> allLookbook = lookBookService.getAllLookbook(styleTag,page);
-        Map<String,String> allTag = styleTagService.getAllStyleTags().getStyleTag();
-
-        model.addAttribute("allTag", allTag);
-        model.addAttribute("allLookbook", allLookbook);
-
-        return "/admin/lookbook/lookbookManage_page";
-    }
-
-
 
     @PostMapping("/style-tag")
     public String addStyleTag(StyleTagDto tag, RedirectAttributes redirectAttributes) {
@@ -114,6 +77,36 @@ public class AdminController {
         return "redirect:/admin/style-tag";
     }
 
+
+    @GetMapping("/product")
+    public String productManagePage(Model model,@RequestParam(value = "page",defaultValue = "1")int page) {
+        page = page-1;
+        Page<ProductDto> allProduct = productService.getAllProductList(page);
+        model.addAttribute("allProduct",allProduct);
+        model.addAttribute("maxPage",10);
+
+        return "/admin/product/productManage_page";
+    }
+
+
+    @GetMapping("/order")
+    public String orderManagePage(Model model,@RequestParam(value = "orderStatus", defaultValue = "ready")String orderStatus,@RequestParam(value = "page",defaultValue = "1")int page) {
+        page = page-1;
+
+        Page<OrderDto> orderList = orderService.getAllOrderCaseByStatus(orderStatus, page);
+        model.addAttribute("orderList", orderList);
+        model.addAttribute("maxPage",10);
+
+        return "/admin/order/orderManage_page";
+    }
+
+    @GetMapping("/order/processing")
+    public String orderProcessingPage(Model model, @RequestParam("orderId")String orderId) {
+        OrderDto order = orderService.getForProcessingOrder(orderId);
+        model.addAttribute("order", order);
+        return "/admin/order/orderProcessing_page";
+    }
+
     @PostMapping("/order/process")
     public String orderProcessed(@RequestParam("orderId")String orderId,@RequestParam("orderStatus")String orderStatus) {
 
@@ -128,4 +121,41 @@ public class AdminController {
 
         return "redirect:/admin/order/processing?orderId=" + orderId;
     }
+
+
+    @GetMapping("/lookbook")
+    public String lookbookManagePage(Model model,
+                                     @RequestParam(value = "styleTag", defaultValue = "all") String styleTag,
+                                     @RequestParam(value="page",defaultValue = "0") int page) {
+        Page<LookbookDto> allLookbook = lookBookService.getAllLookbook(styleTag,page);
+        Map<String,String> allTag = styleTagService.getAllStyleTags().getStyleTag();
+
+        model.addAttribute("allTag", allTag);
+        model.addAttribute("allLookbook", allLookbook);
+        model.addAttribute("maxPage",10);
+
+        return "/admin/lookbook/lookbookManage_page";
+    }
+
+    @GetMapping("/board")
+    public String boardManagePage(Model model, @RequestParam(value = "page", defaultValue = "1") int page) {
+
+        page = page -1;
+        Page<BoardDto> paging = boardService.getAllBoardList(page);
+
+        model.addAttribute("paging", paging);
+        model.addAttribute("maxPage",10);
+
+        return "admin/board/boardManage_page";
+    }
+
+    // 게시글 삭제
+    @PostMapping("/board/delete")
+    public String boardDelete(@RequestParam("boardId") Long boardId, RedirectAttributes redirectAttributes) {
+        boardService.deleteBoard(boardId);
+        redirectAttributes.addFlashAttribute("deleteMsg",boardId+"게시글이 성공적으로 삭제되었습니다.");
+        return "redirect:/admin/board";
+    }
+
+
 }

@@ -4,6 +4,7 @@ import com.lbs.lookbooksite.dto.product.ProductDto;
 import com.lbs.lookbooksite.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.Banner;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -26,9 +27,12 @@ public class ProductController {
 
     // 상품 리스트보기 페이지
     @GetMapping("/list")
-    public String productListTestPage(Model model) {
-        List<ProductDto> allProduct = productService.getAllProductList();
+    public String productListTestPage(Model model,@RequestParam(value = "page",defaultValue = "1")int page) {
+        page = page-1;
+        Page<ProductDto> allProduct = productService.getAllProductList(page);
         model.addAttribute("allProduct",allProduct);
+        model.addAttribute("maxPage",10);
+
         return "/member/product/productList_page";
     }
 

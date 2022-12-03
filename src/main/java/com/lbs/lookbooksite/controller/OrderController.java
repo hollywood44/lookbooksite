@@ -44,6 +44,7 @@ public class OrderController {
 
         model.addAttribute("paging", paging);
         model.addAttribute("maxPage",5);
+        model.addAttribute("totalOrder", paging.getTotalElements());
 
         return "member/order/myOrder_page";
     }

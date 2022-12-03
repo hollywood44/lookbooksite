@@ -36,9 +36,9 @@ public class AlertInterceptor implements HandlerInterceptor {
         if (securityContextObject != null) {
             SecurityContext securityContext = (SecurityContext)securityContextObject;
             Authentication authentication = securityContext.getAuthentication();
+            Member member = (Member) authentication.getPrincipal();
 
-            if (authentication.isAuthenticated()) {
-                Member member = (Member) authentication.getPrincipal();
+            if (authentication.isAuthenticated() && !member.getMemberId().equals("admin")) {
 
                 Long Notice = noticeService.checkNoti(member);
                 modelAndView.addObject("noticeCount",Notice);

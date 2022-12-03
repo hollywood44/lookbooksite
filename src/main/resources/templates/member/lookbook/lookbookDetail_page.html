@@ -22,6 +22,7 @@
                     <h2 class="display-6 fw-bolder" th:text="${detail.lookbookTitle}">무탠다드 22f/w</h2>
                     <h5 th:text="${detail.styleTag}">#태그</h5>
                     <p th:utext="${detail.description}"></p>
+                    <a class="btn btn-secondary" th:href="@{|/lookbook/modify/${detail.lookbookId}|}" th:if="${#strings.equals(isAdmin,'admin')}">수정페이지</a>
                 </div>
                 </th:block>
             </div>

@@ -2,6 +2,8 @@ package com.lbs.lookbooksite.domain;
 
 import com.lbs.lookbooksite.domain.timeEntities.BaseTimeEntity;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,9 +15,10 @@ import java.util.*;
 @Entity
 @Table(name = "member_tbl")
 @Builder
-@ToString(exclude = {"myOrderList","myNoticeList"})
+@ToString
 @Getter
 @AllArgsConstructor
+@DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseTimeEntity implements UserDetails {
 
@@ -61,18 +64,43 @@ public class Member extends BaseTimeEntity implements UserDetails {
     private String addressDetail;
 
     // 스타일태그
-    // todo 스타일태그 테이블에 있는것만 들어갈 수 있도록 프론트에서 조절
-    // todo 고른 항목이 #miniaml#street... 이런 식으로 들어가서 #으로 쪼개서 배열에 담을 수 있게 만들기
     @Column(length = 150)
+    @ColumnDefault("")
     private String styleTag;
 
     @Builder.Default
+    @ToString.Exclude
     @OneToMany(mappedBy = "orderId", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)
     private List<Order> myOrderList = new ArrayList<>();
 
     @Builder.Default
+    @ToString.Exclude
     @OneToMany(mappedBy = "noticeId", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)
     private List<Notice> myNoticeList = new ArrayList<>();
+
+    @Builder.Default
+    @ToString.Exclude
+    @OneToMany(mappedBy = "commenter",cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)
+    private List<Comment> myCommentList= new ArrayList<>();
+
+    @Builder.Default
+    @ToString.Exclude
+    @OneToMany(mappedBy = "writer",cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)
+    private List<Board> myBoardList= new ArrayList<>();
+
+    @Builder.Default
+    @ToString.Exclude
+    @OneToMany(mappedBy = "likedMember",cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)
+    private List<Like> myLikeList= new ArrayList<>();
+
+    @Builder.Default
+    @ToString.Exclude
+    @OneToMany(mappedBy = "sendMember",cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)
+    private List<Report> myReportList= new ArrayList<>();
+
+    @ToString.Exclude
+    @OneToOne(mappedBy = "memberId", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Cart myCart;
 
     //</editor-fold>
 

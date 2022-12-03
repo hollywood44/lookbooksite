@@ -6,6 +6,7 @@ import com.lbs.lookbooksite.domain.Notice;
 import com.lbs.lookbooksite.domain.Order;
 import com.lbs.lookbooksite.dto.NoticeDto;
 import com.lbs.lookbooksite.repository.BoardRepository;
+import com.lbs.lookbooksite.repository.MemberRepository;
 import com.lbs.lookbooksite.repository.NoticeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,17 +27,20 @@ public class NoticeServiceImpl implements NoticeService{
 
     private final NoticeRepository noticeRepository;
     private final BoardRepository boardRepository;
+    private final MemberRepository memberRepository;
 
 
     @Override
     public void sendCommentNotice(Long boardId, Member member) {
         Board targetBoard = boardRepository.findById(boardId).get();
 
-        String sendNotice = boardId + "번 게시글에 댓글이 달렸습니다.";
+        if (!targetBoard.getWriter().getMemberId().equals(member.getMemberId())) {
+            String sendNotice = boardId + "번 게시글에 댓글이 달렸습니다.";
 
-        Notice notice = makeNotice(targetBoard.getWriter(), member, sendNotice);
+            Notice notice = makeNotice(targetBoard.getWriter(), member, sendNotice);
 
-        noticeRepository.save(notice);
+            noticeRepository.save(notice);
+        }
     }
 
     @Override
@@ -56,6 +60,19 @@ public class NoticeServiceImpl implements NoticeService{
         Notice notice = makeNotice(targetMember, admin, status);
 
         noticeRepository.save(notice);
+    }
+
+    @Override
+    @Transactional
+    public void sendLookbookUpdateNotice(String styleTag) {
+        styleTag = styleTag.substring(1);
+        Member admin = Member.builder().memberId("admin").build();
+        List<Member> memberList = memberRepository.findByStyleTagContains(styleTag);
+        String newNotice = "관심있는 스타일인" + styleTag + "스타일의 룩북이 새로 등록되었습니다.";
+        for (Member member : memberList) {
+            Notice notice = makeNotice(member, admin, newNotice);
+            noticeRepository.save(notice);
+        }
     }
 
     @Override

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/adminLayout}"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+  <meta charset="UTF-8">
+  <title>주문 처리 페이지</title>
+</head>
+<body>
+  <section layout:fragment="content">
+
+      <div class="container bg-white p-3" id="board-container">
+
+          <form class="row my-3 mt-3 mb-5 justify-content-center" action="#f" method="get">
+              <div class="col-2">
+                  <select class="form-select" aria-label="Default select">
+                      <option selected>검색조건</option>
+                      <option value="title">제목</option>
+                      <option value="content">내용</option>
+                      <option value="writer">작성자</option>
+                  </select>
+              </div>
+
+              <div class="col-3">
+                  <div class="input-group">
+                      <input type="text" id="searchbar-board" class="form-control"/>
+                  </div>
+              </div>
+          </form>
+
+          <div class="row mt-2 mb-4 justify-content-center text-center">
+              <div class="col-1">게시글번호</div>
+              <div class="col-4">제목</div>
+              <div class="col-2">글쓴이</div>
+              <div class="col-1">좋아요</div>
+              <div class="col-1">조회수</div>
+              <div class="col-1">신고수</div>
+              <div class="col-2">게시글처리</div>
+              <hr class="dropdown-divider" style="width: 100%;" />
+          </div>
+          <th:block th:if="${not #strings.isEmpty(paging)}">
+              <div th:each="board : ${paging}" class="row mt-3 mb-3 justify-content-center text-center" th:style="${board.reportCount >= 3} ? 'background-color:red;'">
+                  <div class="col-1" th:text="${board.boardId}">num</div>
+                  <div class="col-4"><a th:text="${board.title}" th:href="@{|/board/detail/${board.boardId}|}">제목</a></div>
+                  <div class="col-2" th:text="${board.writer}">writer</div>
+                  <div class="col-1" th:text="${board.likeCount}">likeC</div>
+                  <div class="col-1" th:text="${board.viewCount}">viewC</div>
+                  <div class="col-1" th:text="${board.reportCount}">reportCount</div>
+                  <div class="col-2">
+                      <form th:action="@{/admin/board/delete}" method="post" id="deleteForm" class="row">
+                      <sec:csrfInput />
+                      <input type="hidden" name="boardId" th:value="${board.boardId}" />
+                      <div class="input-group justify-content-center">
+                          <div class="col-8 text-end">
+                              <button type="submit" class="btn btn-danger" style="width:70%;">삭제</button>
+                          </div>
+                      </div>
+                  </form>
+                  </div>
+              </div>
+          </th:block>
+          <!--페이징-->
+          <th:block th:if="${not #strings.isEmpty(paging)}">
+              <nav aria-label="Page navigation" id="board-pagenation">
+                  <ul class="pagination justify-content-center"
+                      th:with="start=${(paging.number/maxPage)*maxPage + 1}, end=(${(paging.totalPages == 0) ? 1 : (start + (maxPage - 1) < paging.totalPages ? start + (maxPage - 1) : paging.totalPages)})"
+                  >
+
+                      <li class="page-item" th:if="${start > 1}">
+                          <a class="page-link" th:href="@{|?page=${paging.number}|}">Prev</a>
+                      </li>
+
+                      <li class="page-item"
+                          th:each="page: ${#numbers.sequence(start, end)}">
+                          <a class="page-link"
+                             th:text="${page}"
+                             th:href="@{|?page=${page}|}">1</a>
+                      </li>
+
+                      <li class="page-item" th:if="${end < paging.totalPages}">
+                          <a class="page-link" th:href="@{|?page=${paging.number+2}|}">Next</a>
+                      </li>
+
+                  </ul>
+              </nav>
+          </th:block>
+
+      </div>
+      <script th:inline="javascript">
+
+    /*<![CDATA[*/
+
+    var deleteMsg = [[${deleteMsg}]];
+    if(deleteMsg != null){
+    alert(deleteMsg);
+    }
+
+    /*]]>*/
+
+</script>
+  </section>
+</body>
+</html>

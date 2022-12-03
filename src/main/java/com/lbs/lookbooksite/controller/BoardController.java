@@ -80,6 +80,13 @@ public class BoardController {
         return String.format("redirect:/board/detail/%s", boardId);
     }
 
+    @GetMapping("/report/{boardId}")
+    public String boardReport(@PathVariable("boardId") Long boardId,@AuthenticationPrincipal Member loginedMember) {
+        boardService.reportBoard(loginedMember,boardId);
+
+        return "redirect:/board/detail/"+boardId;
+    }
+
     // 게시글 쓰기 페이지
     @GetMapping("/upload")
     public String uploadBoardPage(BoardDto boardDto) {

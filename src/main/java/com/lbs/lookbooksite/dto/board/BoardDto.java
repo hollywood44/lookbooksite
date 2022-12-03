@@ -47,5 +47,6 @@ public class BoardDto {
 
     private int likeCount;
     private int commentCount;
+    private int reportCount;
 
 }

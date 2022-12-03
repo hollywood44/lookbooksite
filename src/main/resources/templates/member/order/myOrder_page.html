@@ -14,7 +14,7 @@
 <section style="flex:1;min-height:94vh; background-color:#F2F2F2;" id="main-section">
     <div class="bg-white" id="order-header">
         <th:block th:if="${not #strings.isEmpty(paging)}">
-            <h2 class="display-4 fw-bolder ms-5 pt-5" th:text="|주문(${paging.totalPages})|">주문(1)</h2>
+            <h2 class="display-4 fw-bolder ms-5 pt-5" th:text="|주문(${totalOrder})|">주문(5)</h2>
         </th:block>
         <th:block th:unless="${not #strings.isEmpty(paging)}">
             <h2 class="display-4 fw-bolder ms-5 pt-5">주문(0)</h2>

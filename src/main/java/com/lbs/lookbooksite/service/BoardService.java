@@ -112,6 +112,7 @@ public interface BoardService {
                 .writer(entity.getWriter().getMemberId())
                 .commentCount(entity.getCommentCount())
                 .likeCount(entity.getLikeCount())
+                .reportCount(entity.getReportCount())
                 .build();
         return dto;
     }
@@ -137,6 +138,9 @@ public interface BoardService {
     // 게시글 좋아요, 댓글달기
     void likeBoard(Member member, Long boardId);
     void postComment(CommentDto commentDto,Member commenter,Long boardId);
+
+    // 게시글 신고
+    Long reportBoard(Member member, Long boardId);
 
     // 게시글 삭제
     Long deleteBoard(Long boardId);

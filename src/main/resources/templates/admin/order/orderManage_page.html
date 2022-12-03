@@ -13,10 +13,10 @@
   <section layout:fragment="content">
     <div class="border" style="background-color:white;min-height:80vh;">
 <!--      주문 네비-->
-      <nav id="order-nav">
-        <a href="?orderStatus=ready" class="btn">처리 대기</a>
-        <a href="?orderStatus=complete" class="btn">처리 완료</a>
-        <a href="?orderStatus=cancel" class="btn">처리 취소</a>
+      <nav id="order-nav" class="ps-2 pt-2">
+        <a href="?orderStatus=ready" class="btn btn-warning">처리 대기</a>
+        <a href="?orderStatus=complete" class="btn btn-primary">처리 완료</a>
+        <a href="?orderStatus=cancel" class="btn btn-danger">처리 취소</a>
       </nav>
 
       <div class="row mt-5 mx-3 text-center border-bottom">
@@ -26,42 +26,45 @@
         <div class="col-sm-3">처리</div>
       </div>
 
-      <div class="row mt-5 mx-3 text-center">
-        <th:block th:each="order : ${orderList}">
-            <div class="col-sm-3">[[${order.orderId}]]</div>
-            <div class="col-sm-3">[[${order.memberId}]]</div>
-            <div class="col-sm-3" th:if="${#strings.equals(order.orderStatus,'Ready')}">처리 대기</div>
-            <div class="col-sm-3" th:if="${#strings.equals(order.orderStatus,'Cancel')}">취소 처리</div>
-            <div class="col-sm-3" th:if="${#strings.equals(order.orderStatus,'Complete')}">처리 완료</div>
-            <div class="col-sm-3 mb-1"><a th:href="@{|/admin/order/processing?orderId=${order.orderId}|}">처리페이지</a></div>
-        </th:block>
+      <div style="min-height:60vh;">
+          <div class="row mt-5 mx-3 text-center">
+            <th:block th:each="order : ${orderList}">
+                <div class="col-sm-3">[[${order.orderId}]]</div>
+                <div class="col-sm-3">[[${order.memberId}]]</div>
+                <div class="col-sm-3" th:if="${#strings.equals(order.orderStatus,'Ready')}">처리 대기</div>
+                <div class="col-sm-3" th:if="${#strings.equals(order.orderStatus,'Cancel')}">취소 처리</div>
+                <div class="col-sm-3" th:if="${#strings.equals(order.orderStatus,'Complete')}">처리 완료</div>
+                <div class="col-sm-3 mb-1"><a th:href="@{|/admin/order/processing?orderId=${order.orderId}|}">처리페이지</a></div>
+            </th:block>
+          </div>
       </div>
+        <!--        페이징-->
+        <th:block th:if="${not #strings.isEmpty(orderList)}">
+            <nav aria-label="Page navigation" id="board-pagenation">
+                <ul class="pagination justify-content-center"
+                    th:with="start=${(orderList.number/maxPage)*maxPage + 1}, end=(${(orderList.totalPages == 0) ? 1 : (start + (maxPage - 1) < orderList.totalPages ? start + (maxPage - 1) : orderList.totalPages)})"
+                >
+
+                    <li class="page-item" th:if="${start > 1}">
+                        <a class="page-link" th:href="@{|?page=${orderList.number}|}">Prev</a>
+                    </li>
+
+                    <li class="page-item"
+                        th:each="page: ${#numbers.sequence(start, end)}">
+                        <a class="page-link"
+                           th:text="${page}"
+                           th:href="@{|?page=${page}|}">1</a>
+                    </li>
+
+                    <li class="page-item" th:if="${end < orderList.totalPages}">
+                        <a class="page-link" th:href="@{|?page=${orderList.number+2}|}">Next</a>
+                    </li>
+
+                </ul>
+            </nav>
+        </th:block>
     </div>
-      <!--        페이징-->
-      <th:block th:if="${not #strings.isEmpty(orderList)}">
-          <nav aria-label="Page navigation" id="board-pagenation">
-              <ul class="pagination justify-content-center"
-                  th:with="start=${(orderList.number/maxPage)*maxPage + 1}, end=(${(orderList.totalPages == 0) ? 1 : (start + (maxPage - 1) < orderList.totalPages ? start + (maxPage - 1) : orderList.totalPages)})"
-              >
 
-                  <li class="page-item" th:if="${start > 1}">
-                      <a class="page-link" th:href="@{|?page=${orderList.number}|}">Prev</a>
-                  </li>
-
-                  <li class="page-item"
-                      th:each="page: ${#numbers.sequence(start, end)}">
-                      <a class="page-link"
-                         th:text="${page}"
-                         th:href="@{|?page=${page}|}">1</a>
-                  </li>
-
-                  <li class="page-item" th:if="${end < orderList.totalPages}">
-                      <a class="page-link" th:href="@{|?page=${orderList.number+2}|}">Next</a>
-                  </li>
-
-              </ul>
-          </nav>
-      </th:block>
   </section>
 
 </body>

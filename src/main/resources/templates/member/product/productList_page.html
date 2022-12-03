@@ -25,7 +25,7 @@
     <div class="container px-4 px-lg-5 mt-5">
         <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
             <!--일반 상품-->
-            <div class="col mb-5" th:each="product : ${allProduct}">
+            <div class="col-sm-4 mb-5" th:each="product : ${allProduct}">
                 <div class="card h-100">
                     <!-- Product image-->
                     <th:block th:if="${not #strings.isEmpty(product.returnImages)}">
@@ -70,6 +70,31 @@
 <!--                </div>-->
 <!--            </div>-->
         </div>
+        <!--        페이징-->
+        <th:block th:if="${not #strings.isEmpty(allProduct)}">
+            <nav aria-label="Page navigation" id="board-pagenation">
+                <ul class="pagination justify-content-center"
+                    th:with="start=${(allProduct.number/maxPage)*maxPage + 1}, end=(${(allProduct.totalPages == 0) ? 1 : (start + (maxPage - 1) < allProduct.totalPages ? start + (maxPage - 1) : allProduct.totalPages)})"
+                >
+
+                    <li class="page-item" th:if="${start > 1}">
+                        <a class="page-link" th:href="@{|?page=${allProduct.number}|}">Prev</a>
+                    </li>
+
+                    <li class="page-item"
+                        th:each="page: ${#numbers.sequence(start, end)}">
+                        <a class="page-link"
+                           th:text="${page}"
+                           th:href="@{|?page=${page}|}">1</a>
+                    </li>
+
+                    <li class="page-item" th:if="${end < allProduct.totalPages}">
+                        <a class="page-link" th:href="@{|?page=${allProduct.number+2}|}">Next</a>
+                    </li>
+
+                </ul>
+            </nav>
+        </th:block>
     </div>
 </section>
 

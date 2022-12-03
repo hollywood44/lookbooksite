@@ -9,6 +9,11 @@ import com.lbs.lookbooksite.repository.Product_ImageRepository;
 import lombok.RequiredArgsConstructor;
 import net.coobird.thumbnailator.Thumbnailator;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -126,13 +131,16 @@ public class ProductServiceImpl implements ProductService {
 
     // 상세 상품 보기
     @Override
-    public List<ProductDto> getAllProductList() {
+    public Page<ProductDto> getAllProductList(int page) {
         Function<Product, ProductDto> fn = (entity->(entityToDTO(entity)));
-        List<ProductDto> allProduct = null;
-        List<Product> entityList = repository.findAll();
+        Sort sort = Sort.by("regDate").descending();
+        Pageable pageable = PageRequest.of(page, 9, sort);
+
+        Page<ProductDto> allProduct = Page.empty();
+        Page<Product> entityList = repository.findAll(pageable);
 
         if (!entityList.isEmpty()) {
-            return allProduct = entityList.stream().map(fn).collect(Collectors.toList());
+            return allProduct = entityList.map(fn);
         } else {
             return allProduct;
         }

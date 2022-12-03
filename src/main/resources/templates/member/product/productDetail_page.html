@@ -38,7 +38,7 @@
                                 <i class="bi-cart-fill me-1"></i>
                                 Add to cart
                             </button>
-                            <a class="btn btn-secondary" th:href="@{|/product/modify/${product.productId}|}">수정페이지</a>
+                            <a class="btn btn-secondary" th:href="@{|/product/modify/${product.productId}|}" th:if="${#strings.equals(isAdmin,'admin')}">수정페이지</a>
                         </form>
                     </div>
                 </div>

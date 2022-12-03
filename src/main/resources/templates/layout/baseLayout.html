@@ -24,7 +24,7 @@
 <nav th:replace="fragment/nav :: navFragment"></nav>
 
 
-<section layout:fragment="content" style="flex:1;"></section>
+<section layout:fragment="content" style="flex:1;" th:with="isAdmin = ${#authentication.name}"></section>
 
 <!-- 푸터 -->
 <footer th:replace="fragment/footer :: footerFragment"></footer>

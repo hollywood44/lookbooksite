@@ -13,10 +13,10 @@
   <section layout:fragment="content">
     <div class="border" style="background-color:white;min-height:80vh;">
         <!--      주문 네비-->
-        <nav id="order-nav">
-            <a href="/admin/order?orderStatus=ready" class="btn">처리 대기</a>
-            <a href="/admin/order?orderStatus=complete" class="btn">처리 완료</a>
-            <a href="/admin/order?orderStatus=cancel" class="btn">처리 취소</a>
+        <nav id="order-nav" class="ps-2 pt-2">
+            <a href="/admin/order?orderStatus=ready" class="btn btn-warning">처리 대기</a>
+            <a href="/admin/order?orderStatus=complete" class="btn btn-primary">처리 완료</a>
+            <a href="/admin/order?orderStatus=cancel" class="btn btn-danger">처리 취소</a>
         </nav>
 
         <div class="row justify-content-center" id="item-container">

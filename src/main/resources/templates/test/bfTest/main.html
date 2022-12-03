@@ -144,5 +144,17 @@
     </div>
   </div>
 </div>
+<script th:inline="javascript">
+
+    /*<![CDATA[*/
+
+    var successDeleteAccountMsg = [[${successDeleteAccountMsg}]];
+    if(successDeleteAccountMsg != null){
+    alert(successDeleteAccountMsg);
+    }
+
+    /*]]>*/
+
+</script>
 </body>
 </html>

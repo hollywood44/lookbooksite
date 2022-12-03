@@ -11,25 +11,27 @@
 <body>
 
   <section layout:fragment="content">
-    <div class="border">
+    <div class="border bg-white pb-4 mb-5">
       <h2>현재 스타일 태그</h2>
 
-      <div>
-        <ul>
-          <th:block th:each="tag : ${tags.styleTag}">
-            <li>[[${tag.key}]]</li>
+      <div >
+        <div class="row ms-4">
+          <div th:each="tag : ${tags.styleTag}" class="col-sm-4 my-3">
+            <p>[[${tag.key}]]</p>
             <img th:src="${tag.value}" style="width:300px;height:300px;">
-          </th:block>
-        </ul>
+          </div>
+        </div>
       </div>
 
-      <form th:action="@{/admin/style-tag}" method="post" th:object="${tags}" enctype="multipart/form-data">
-        <sec:csrfInput />
-        <input type="text" th:field="*{tag}" placeholder="스타일태그 명" />
-        <input type="file" th:field="*{url}" name="url"/>
-        <input type="text" th:field="*{urlName}" placeholder="이미지명"/>
-        <input type="submit"  value="스타일태그 추가"/>
-      </form>
+      <div class="m-3 text-start" style="width:50%;">
+        <form th:action="@{/admin/style-tag}" method="post" th:object="${tags}" enctype="multipart/form-data">
+          <sec:csrfInput />
+          <input type="text" th:field="*{tag}" placeholder="스타일태그 명" class="form-control"/><br>
+          <input type="file" th:field="*{url}" name="url" class="form-control"/> <br>
+          <input type="text" th:field="*{urlName}" placeholder="이미지명" class="form-control"/><br>
+          <input type="submit"  value="스타일태그 추가" class="btn btn-secondary"/><br>
+        </form>
+      </div>
 
 
     </div>

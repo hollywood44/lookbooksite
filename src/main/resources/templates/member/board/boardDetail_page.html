@@ -19,8 +19,8 @@
 
                 <div class="row boardD-titleS">
                     <h1 class="col-10 board-item" th:text="${board.title}">title</h1>
-                    <!--                            todo disabled-->
-                    <a class="col-2 btn" th:href="@{|/board/like/${board.boardId}|}">추천</a>
+                    <a class="col-2 btn btn-primary" th:href="@{|/board/like/${board.boardId}|}" sec:authorize="isAuthenticated()">추천</a>
+                    <a class="col-2 btn btn-danger ms-1" data-bs-toggle="modal" data-bs-target="#reportModal" href="#" sec:authorize="isAuthenticated()">신고</a>
                     <div class="col-10 board-item" th:text="|작성자 : ${board.writer}|">작성자 : writer</div>
                     <div class="col-10 board-item" th:text="|작성일 : ${#temporals.format(board.regDate, 'yyyy-MM-dd HH:mm')}|">작성일 : 2022-11-11</div>
                     <div class="col-10 board-item" th:text="|수정일 : ${#temporals.format(board.modDate, 'yyyy-MM-dd HH:mm')}|">수정일 : 2022-11-12</div>
@@ -43,9 +43,12 @@
                     <form th:action="@{|/board/comment/${board.boardId}|}" method="post">
                         <div class="input-group mb-3">
                             <sec:csrfInput />
-<!--                            todo disabled-->
-                            <input type="text" name="comment" class="form-control" placeholder="댓글작성" aria-label="Recipient's username" aria-describedby="button-addon2" id="com-input">
-                            <button class="btn btn-outline-secondary" type="submit" id="com-btn">댓글달기</button>
+
+                            <th:block sec:authorize="isAuthenticated()">
+                                <input type="text" name="comment" class="form-control" placeholder="댓글작성" aria-label="Recipient's username" aria-describedby="button-addon2" id="com-input">
+                                <button class="btn btn-outline-secondary" type="submit" id="com-btn">댓글달기</button>
+                            </th:block>
+
                         </div>
                     </form>
 
@@ -57,6 +60,31 @@
 
             </div>
 
+        </div>
+        <!-- report Modal -->
+        <div class="modal fade" id="reportModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Report</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        이 게시물을 신고 하시겠습니까?
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <a class="btn btn-danger" th:href="@{|/board/report/${board.boardId}|}">Yes</a>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">No</button>
+                    </div>
+
+                </div>
+            </div>
         </div>
     </section>
 

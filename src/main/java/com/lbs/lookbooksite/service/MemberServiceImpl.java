@@ -40,6 +40,21 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
+    public String deleteAccount(Member member, String password) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        Member check = repository.findById(member.getMemberId()).get();
+
+
+        if (encoder.matches(password, check.getPassword())) {
+            repository.delete(check);
+        } else {
+            return "비밀번호가 일치하지 않습니다.";
+        }
+
+        return check.getMemberId();
+    }
+
+    @Override
     public MemberDto getMyInfo(Member loginedMember) {
         System.out.println(loginedMember);
 
@@ -68,7 +83,7 @@ public class MemberServiceImpl implements MemberService{
         Member loginedMember = repository.findById(member.getMemberId()).get();
 
         String checkNull = loginedMember.getStyleTag();
-        if (checkNull.isEmpty()) {
+        if (checkNull == null) {
             return new ArrayList<>();
         } else {
             List<String> myStyleTagList = new ArrayList<>(Arrays.asList(loginedMember.getStyleTag().split(",")));
@@ -97,6 +112,8 @@ public class MemberServiceImpl implements MemberService{
             return "phone"; // 존재하는 휴대폰 번호
         }
     }
+
+
 
     // <editor-fold desc="시큐리티 관련 오버라이드">
     // username(userId)를 가지고 db에서 값을 찾아옴 // 자동으로 password를 비교해주는 기능이 있다

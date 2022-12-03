@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -122,7 +124,6 @@ public class MemberController {
             return "member/personal/signUp_page";
         }
         memberDto.setAuth("ROLE_MEMBER");
-        memberDto.setStyleTag("");
 
         try {
             memberService.signup(memberDto);
@@ -167,4 +168,19 @@ public class MemberController {
             return "redirect:/member/styleTag";
         }
     }
+
+    @PostMapping("/deleteAccount")
+    public String deleteMyAccount(@AuthenticationPrincipal Member member, @RequestParam("password") String password, RedirectAttributes redirectAttributes) {
+        String status = memberService.deleteAccount(member, password);
+        if (status.equals("비밀번호가 일치하지 않습니다.")) {
+            redirectAttributes.addFlashAttribute("deleteMsg", status);
+            return "redirect:/member/my-info";
+        } else {
+            redirectAttributes.addFlashAttribute("successDeleteAccountMsg", "성공적으로 회원 탈퇴 되었습니다.");
+            SecurityContextHolder.clearContext();
+            return "redirect:/member/main";
+        }
+
+    }
+
 }

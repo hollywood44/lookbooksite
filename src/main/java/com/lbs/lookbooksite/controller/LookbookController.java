@@ -37,6 +37,8 @@ public class LookbookController {
 
         model.addAttribute("allTag", allTag);
         model.addAttribute("allLookbook", allLookbook);
+        model.addAttribute("maxPage",10);
+
         return "/member/lookbook/lookbookHome_page";
     }
 

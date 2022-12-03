@@ -63,4 +63,6 @@ public interface MemberService extends UserDetailsService {
     public void changeStyleTag(List<String> tagList,Member loginedMember);
     // 멤버 정보 수정
     public String changeMemberInfo(MemberDto changeMember);
+    // 회원 탈퇴
+    public String deleteAccount(Member member,String password);
 }

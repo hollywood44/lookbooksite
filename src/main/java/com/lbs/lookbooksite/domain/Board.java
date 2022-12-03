@@ -56,13 +56,19 @@ public class Board  extends BaseTimeEntity {
     @OneToMany(mappedBy = "targetBoard",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Like> likeList = new ArrayList<>();
 
+    @Builder.Default
+    @OneToMany(mappedBy = "targetBoard", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Report> reportList = new ArrayList<>();
+
+
+
+
+    //===============================비즈니스 로직===============================//
+
     public void addImgs(Board_Image board_image) {
         boardImgs.add(board_image);
         board_image.setBoardId(this);
     }
-
-
-    //===============================비즈니스 로직===============================//
 
     // 조회수 증가
     public void plusViewCount() {
@@ -76,6 +82,9 @@ public class Board  extends BaseTimeEntity {
         return this.commentList.size();
     }
 
+    public int getReportCount() {
+        return this.reportList.size();
+    }
     public void modify(BoardDto dto) {
         this.title = dto.getTitle();
         this.content = dto.getContent();

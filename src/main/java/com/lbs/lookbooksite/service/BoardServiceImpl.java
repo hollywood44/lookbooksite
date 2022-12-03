@@ -4,10 +4,7 @@ import com.lbs.lookbooksite.configs.FileManager;
 import com.lbs.lookbooksite.domain.*;
 import com.lbs.lookbooksite.dto.board.BoardDto;
 import com.lbs.lookbooksite.dto.board.CommentDto;
-import com.lbs.lookbooksite.repository.BoardRepository;
-import com.lbs.lookbooksite.repository.Board_ImageRepository;
-import com.lbs.lookbooksite.repository.CommentRepository;
-import com.lbs.lookbooksite.repository.LikeRepository;
+import com.lbs.lookbooksite.repository.*;
 import lombok.RequiredArgsConstructor;
 import net.coobird.thumbnailator.Thumbnailator;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,6 +39,7 @@ public class BoardServiceImpl implements BoardService{
     private final Board_ImageRepository imageRepository;
     private final LikeRepository likeRepository;
     private final CommentRepository commentRepository;
+    private final ReportRepository reportRepository;
 
     public String makeFolder() {
         String str = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
@@ -256,6 +254,23 @@ public class BoardServiceImpl implements BoardService{
                 .build();
 
         commentRepository.save(putComment);
+    }
+
+    @Override
+    public Long reportBoard(Member member, Long boardId) {
+        Board board = boardRepository.findById(boardId).get();
+        Optional<Report> report = reportRepository.findByTargetBoardAndSendMember(board, member);
+
+        if (report.isPresent()) {
+            reportRepository.deleteById(report.get().getReportId());
+        } else {
+            Report newReport = Report.builder()
+                    .targetBoard(board)
+                    .sendMember(member)
+                    .build();
+            reportRepository.save(newReport);
+        }
+        return boardId;
     }
 
     @Override

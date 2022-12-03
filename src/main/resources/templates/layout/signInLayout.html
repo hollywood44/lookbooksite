@@ -22,7 +22,7 @@
 <nav th:replace="fragment/nav :: navFragment"></nav>
 
 
-<th:block layout:fragment="content"></th:block>
+<th:block layout:fragment="content" th:with="isAdmin = ${#authentication.name}"></th:block>
 
 
 </body>

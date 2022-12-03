@@ -12,10 +12,51 @@
       <a class="btn member-menu-item" href="/member/myBoard">내 글</a>
       <a class="btn member-menu-item" href="/member/styleTag">스타일태그 관리</a>
       <a class="btn member-menu-item" href="/order/myOrder">내 주문</a>
-      <a class="btn member-menu-item" href="#">회원탈퇴</a>
+      <a class="btn member-menu-item" href="#" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">회원탈퇴</a>
+      <!-- signOut Modal -->
+      <div class="modal fade" id="deleteAccountModal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+              <h4 class="modal-title">회원탈퇴</h4>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+              탈퇴 하시려면 비밀번호를 입력해 주세요
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+              <form th:action="@{/member/deleteAccount}" method="post" >
+                <sec:csrfInput />
+                비밀번호
+                <input type="text" name="password" placeholder="비밀번호를 입력해 주세요"/>
+                <input type="submit" value="Yes" class="btn btn-danger" />
+              </form>
+              <button type="button" class="btn btn-primary" data-bs-dismiss="modal">No</button>
+            </div>
+
+          </div>
+        </div>
+      </div>
     </div>
   </div>
+  <script th:inline="javascript">
 
+    /*<![CDATA[*/
+
+    var deleteMsg = [[${deleteMsg}]];
+    if(deleteMsg != null){
+    alert(deleteMsg);
+    }
+
+    /*]]>*/
+
+</script>
 
 </div>
 </html>
