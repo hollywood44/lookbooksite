@@ -100,8 +100,10 @@ public class BoardController {
         if (condition.isEmpty() && keyword.isEmpty()) {
             return "redirect:/board/list";
         } else {
-            Page<BoardDto> paging = boardService.getAllBoardList(page);
+            Page<BoardDto> paging = boardService.getSearchedBoardList(condition,keyword,page);
 
+            model.addAttribute("condition",condition);
+            model.addAttribute("keyword", keyword);
             model.addAttribute("paging", paging);
             model.addAttribute("maxPage",10);
 

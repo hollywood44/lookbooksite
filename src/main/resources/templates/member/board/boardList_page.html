@@ -56,7 +56,8 @@
           </th:block>
           <!--페이징-->
           <th:block th:if="${not #strings.isEmpty(paging)}">
-            <nav aria-label="Page navigation" id="board-pagenation">
+<!--            검색 아닐때-->
+            <nav aria-label="Page navigation" id="board-pagenation" th:if="${keyword == null}">
               <ul class="pagination justify-content-center"
                   th:with="start=${(paging.number/maxPage)*maxPage + 1}, end=(${(paging.totalPages == 0) ? 1 : (start + (maxPage - 1) < paging.totalPages ? start + (maxPage - 1) : paging.totalPages)})"
               >
@@ -78,6 +79,30 @@
 
               </ul>
             </nav>
+<!--            검색 조건 있을 때-->
+            <nav aria-label="Page navigation" id="board-pagenation-search" th:if="${keyword != null}">
+              <ul class="pagination justify-content-center"
+                  th:with="start=${(paging.number/maxPage)*maxPage + 1}, end=(${(paging.totalPages == 0) ? 1 : (start + (maxPage - 1) < paging.totalPages ? start + (maxPage - 1) : paging.totalPages)})"
+              >
+
+                <li class="page-item" th:if="${start > 1}">
+                  <a class="page-link" th:href="@{|?condition=${condition}&keyword=${keyword}&page=${paging.number}|}">Prev</a>
+                </li>
+
+                <li class="page-item"
+                    th:each="page: ${#numbers.sequence(start, end)}">
+                  <a class="page-link"
+                     th:text="${page}"
+                     th:href="@{|?condition=${condition}&keyword=${keyword}&page=${page}|}">1</a>
+                </li>
+
+                <li class="page-item" th:if="${end < paging.totalPages}">
+                  <a class="page-link" th:href="@{|?condition=${condition}&keyword=${keyword}&page=${paging.number+2}|}">Next</a>
+                </li>
+
+              </ul>
+            </nav>
+
           </th:block>
 
         </div>

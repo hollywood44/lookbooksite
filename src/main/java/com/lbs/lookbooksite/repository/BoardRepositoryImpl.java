@@ -6,6 +6,7 @@ import static com.lbs.lookbooksite.domain.QBoard.board;
 import com.lbs.lookbooksite.domain.Member;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -33,51 +34,98 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom{
         Long count = 0L;
         switch (condition) {
             case "all":
-                results = queryFactory
-                        .selectFrom(board)
-                        .where(
-                                containWriter(keyword)
-                                        .or(containContent(keyword))
-                                        .or(containTitle(keyword))
-                        )
-                        .offset(pageable.getOffset()) /*offset*/
-                        .limit(pageable.getPageSize())/*limit*/
-                        .orderBy(board.boardId.desc())
-                        .fetch();
-                return new PageImpl<>(results);
+                return searchAll(keyword, condition, pageable);
             case "title":
-                results = queryFactory
-                        .selectFrom(board)
-                        .where(
-                                containTitle(keyword)
-                        )
-                        .offset(pageable.getOffset()) /*offset*/
-                        .limit(pageable.getPageSize())/*limit*/
-                        .fetch();
-                return new PageImpl<>(results);
+                return searchTitle(keyword, condition, pageable);
             case "content":
-                results = queryFactory
-                        .selectFrom(board)
-                        .where(
-                                containContent(keyword)
-                        )
-                        .offset(pageable.getOffset()) /*offset*/
-                        .limit(pageable.getPageSize())/*limit*/
-                        .fetch();
-                return new PageImpl<>(results);
+                return searchContent(keyword, condition, pageable);
             case "writer":
-                results = queryFactory
-                        .selectFrom(board)
-                        .where(
-                                containWriter(keyword)
-                        )
-                        .offset(pageable.getOffset()) /*offset*/
-                        .limit(pageable.getPageSize())/*limit*/
-                        .fetch();
-                return new PageImpl<>(results);
+                return searchWriter(keyword, condition, pageable);
 
         }
         return Page.empty();
+    }
+
+    Page<Board> searchAll(String keyword,String condition, Pageable pageable) {
+        List<Board> results = queryFactory
+                .selectFrom(board)
+                .where(
+                        containWriter(keyword)
+                                .or(containContent(keyword))
+                                .or(containTitle(keyword))
+                )
+                .offset(pageable.getOffset()) /*offset*/
+                .limit(pageable.getPageSize())/*limit*/
+                .orderBy(board.boardId.desc())
+                .fetch();
+
+        Long count = queryFactory
+                .select(board.count())
+                .from(board)
+                .where(
+                        containWriter(keyword)
+                                .or(containContent(keyword))
+                                .or(containTitle(keyword))
+                ).fetchOne();
+
+        return new PageImpl<>(results, pageable, count);
+    }
+    Page<Board> searchTitle(String keyword,String condition, Pageable pageable) {
+        List<Board> results = queryFactory
+                .selectFrom(board)
+                .where(
+                        containTitle(keyword)
+                )
+                .offset(pageable.getOffset()) /*offset*/
+                .limit(pageable.getPageSize())/*limit*/
+                .fetch();
+
+        Long count = queryFactory
+                .select(board.count())
+                .from(board)
+                .where(
+                        containTitle(keyword)
+                ).fetchOne();
+
+        return new PageImpl<>(results, pageable, count);
+    }
+    Page<Board> searchContent(String keyword,String condition, Pageable pageable) {
+        List<Board> results = queryFactory
+                .selectFrom(board)
+                .where(
+                        containContent(keyword)
+                )
+                .offset(pageable.getOffset()) /*offset*/
+                .limit(pageable.getPageSize())/*limit*/
+                .fetch();
+
+        Long count = queryFactory
+                .select(board.count())
+                .from(board)
+                .where(
+                        containContent(keyword)
+                ).fetchOne();
+
+        return new PageImpl<>(results, pageable, count);
+    }
+    Page<Board> searchWriter(String keyword,String condition, Pageable pageable) {
+        List<Board> results = queryFactory
+                .selectFrom(board)
+                .where(
+                        containWriter(keyword)
+                )
+                .offset(pageable.getOffset()) /*offset*/
+                .limit(pageable.getPageSize())/*limit*/
+                .fetch();
+
+        Long count = queryFactory
+                .select(board.count())
+                .from(board)
+                .where(
+                        containWriter(keyword)
+                ).fetchOne();
+
+        return new PageImpl<>(results, pageable, count);
     }
 
     private BooleanExpression containTitle(String titleKeyword) {
